@@ -81,6 +81,7 @@ repeat:
 		fclose(file);
 		file = NULL;
 		free(text);
+		text = NULL;
 		size_guess *= 2;
 		goto repeat;
 	}
