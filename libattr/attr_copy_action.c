@@ -129,6 +129,7 @@ repeat:
 
 		t += strcspn(t, "\n");
 	}
+	free(text);
 	return 0;
 
 parse_error:
