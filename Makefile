@@ -114,3 +114,10 @@ realclean distclean: clean
 .PHONY: tests root-tests ext-tests
 tests root-tests ext-tests: default
 	$(MAKE) -C test/ $@
+
+# HACK: Convert the man pages into html
+html:
+	@for man in $$(find man -name '*.[1-9]'); do \
+		echo $${man%.*}.html ; \
+		groff -man -Thtml -P-h -P-l $$man > $${man%.*}.html; \
+	done
