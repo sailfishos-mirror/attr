@@ -133,7 +133,7 @@ const char *encode(const char *value, size_t *size)
 		size_t n, extra = 0;
 
 		for (e=(char *)value; e < value + *size; e++) {
-			if (*e == '\n' || *e == '\r')
+			if (*e == '\0' || *e == '\n' || *e == '\r')
 				extra += 4;
 			else if (*e == '\\' || *e == '"')
 				extra++;
@@ -147,7 +147,9 @@ const char *encode(const char *value, size_t *size)
 		e = encoded;
 		*e++='"';
 		for (n = 0; n < *size; n++, value++) {
-			if (*value == '\n' || *value == '\r') {
+			if (*value == '\0' && n + 1 == *size)
+				break;
+			if (*value == '\0' || *value == '\n' || *value == '\r') {
 				*e++ = '\\';
 				*e++ = '0' + ((unsigned char)*value >> 6);
 				*e++ = '0' + (((unsigned char)*value & 070) >> 3);
