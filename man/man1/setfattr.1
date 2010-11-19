@@ -46,7 +46,15 @@ for each specified file.
 Specifies the name of the extended attribute to set.
 .TP
 .BR \-v " \f2value\f1, " \-\-value "=\f2value\f1"
-Specifies the new value for the extended attribute.
+Specifies the new value of the extended attribute. There are three methods
+available for encoding the value.  If the given string is enclosed in double
+quotes, the inner string is treated as text. In that case, backslashes and
+double quotes have special meanings and need to be escaped by a preceding
+backslash. Any control characters can be encoded as a backslash followed by
+three digits as its ASCII code in octal. If the given string begins with 0x or
+0X, it expresses a hexadecimal number. If the given string begins with 0s or
+0S, base64 encoding is expected.  See also the \-\-encoding option of
+getfattr(1).
 .TP
 .BR \-x " \f2name\f1, " \-\-remove "=\f2name\f1"
 Remove the named extended attribute entirely.
