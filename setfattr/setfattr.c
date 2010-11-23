@@ -120,7 +120,7 @@ int restore(const char *filename)
 			break;
 		line++;
 		if (strncmp(l, "# file: ", 8) != 0) {
-			if (filename) {
+			if (file != stdin) {
 				fprintf(stderr, _("%s: %s: No filename found "
 				                  "in line %d, aborting\n"),
 					progname, filename, backup_line);
