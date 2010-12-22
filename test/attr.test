@@ -22,6 +22,10 @@ Try various valid and invalid names
 	> user.name
 	> 
 	
+	$ setfattr -x user.name f
+	$ sh -c 'getfattr -n user.name f && echo zero exit code'
+	> f: user.name: No such attribute
+	
 	$ setfattr -n user.n -v value f
 	$ rm f
 

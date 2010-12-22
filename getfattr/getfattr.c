@@ -353,6 +353,7 @@ int do_print(const char *path, const struct stat *stat, int walk_flags,
 	     void *unused)
 {
 	int header_printed = 0;
+	int err = 0;
 
 	if (walk_flags & WALK_TREE_FAILED) {
 		fprintf(stderr, "%s: %s: %s\n", progname, xquote(path, "\n\r"),
@@ -361,13 +362,13 @@ int do_print(const char *path, const struct stat *stat, int walk_flags,
 	}
 
 	if (opt_name)
-		print_attribute(path, opt_name, &header_printed);
+		err = print_attribute(path, opt_name, &header_printed);
 	else
-		list_attributes(path, &header_printed);
+		err = list_attributes(path, &header_printed);
 
 	if (header_printed)
 		puts("");
-	return 0;
+	return err;
 }
 
 void help(void)
