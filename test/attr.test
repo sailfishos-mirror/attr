@@ -217,6 +217,14 @@ Attributes of symlinks vs. the files pointed to
 
 	$ rm f
 
+Attributes of symlinks vs. the files pointed to in a directory
+
+	$ mkdir src
+	$ touch src/target
+	$ setfattr -n user.color -v blue src/target
+	$ ln -s src symlink
+	$ getfattr -n user.color -h symlink 2>/dev/null
+
 Tests for file name that contain special characters
 
 	$ touch "f "

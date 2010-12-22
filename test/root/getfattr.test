@@ -51,13 +51,7 @@ Make sure we follow symlinks on the command line only when we should:
 	> user.test="test"
 	>
 
-	$ getfattr -m- -Rhd here | ../sort-getfattr-output
-	> # file: here/f
-	> user.test="test"
-	>
-	> # file: here/l
-	> trusted.test="test"
-	>
+	$ getfattr -m- -Rhd here
 
 	$ getfattr -m- -RLhd here | ../sort-getfattr-output
 	> # file: here/f
