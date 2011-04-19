@@ -25,7 +25,7 @@ With -h, we do not dereference symlinks:
 	>
 
 Do the same for symlinks we find in a directory hierarchy:
-	$ getfattr -m- -Rd .
+	$ getfattr -m- -Rd . | ../sort-getfattr-output
 	> # file: f
 	> user.test="test"
 	>
@@ -33,7 +33,7 @@ Do the same for symlinks we find in a directory hierarchy:
 	> user.test="test"
 	>
 
-	$ getfattr -m- -Rhd .
+	$ getfattr -m- -Rhd . | ../sort-getfattr-output
 	> # file: f
 	> user.test="test"
 	>
@@ -43,7 +43,7 @@ Do the same for symlinks we find in a directory hierarchy:
 
 Make sure we follow symlinks on the command line only when we should:
 	$ ln -s . here
-	$ getfattr -m- -Rd here
+	$ getfattr -m- -Rd here | ../sort-getfattr-output
 	> # file: here/f
 	> user.test="test"
 	>
@@ -51,7 +51,7 @@ Make sure we follow symlinks on the command line only when we should:
 	> user.test="test"
 	>
 
-	$ getfattr -m- -Rhd here
+	$ getfattr -m- -Rhd here | ../sort-getfattr-output
 	> # file: here/f
 	> user.test="test"
 	>
@@ -59,7 +59,7 @@ Make sure we follow symlinks on the command line only when we should:
 	> trusted.test="test"
 	>
 
-	$ getfattr -m- -RLhd here
+	$ getfattr -m- -RLhd here | ../sort-getfattr-output
 	> # file: here/f
 	> user.test="test"
 	>
@@ -72,7 +72,7 @@ Make sure we follow symlinks on the command line only when we should:
 Make sure we recurse into sub-directories:
 	$ mkdir sub
 	$ mv f l sub
-	$ getfattr -m- -Rd .
+	$ getfattr -m- -Rd . | ../sort-getfattr-output
 	> # file: sub/f
 	> user.test="test"
 	>
@@ -80,7 +80,7 @@ Make sure we recurse into sub-directories:
 	> user.test="test"
 	>
 
-	$ getfattr -m- -Rhd .
+	$ getfattr -m- -Rhd . | ../sort-getfattr-output
 	> # file: sub/f
 	> user.test="test"
 	>
@@ -93,7 +93,7 @@ Make sure we follow symlinks to directories only when we should:
 	$ ln -s ../sub sub2/to-sub
 	$ getfattr -m- -Rhd sub2
 
-	$ getfattr -m- -RLhd sub2
+	$ getfattr -m- -RLhd sub2 | ../sort-getfattr-output
 	> # file: sub2/to-sub/f
 	> user.test="test"
 	>
@@ -105,19 +105,18 @@ Make sure we follow symlinks to directories only when we should:
 
 Symlink loop detection:
 	$ ln -s .. sub/up
-	$ getfattr -m- -RLhd .
-	> # file: sub2/to-sub/f
-	> user.test="test"
-	>
-	> # file: sub2/to-sub/l
-	> trusted.test="test"
-	>
+	$ getfattr -m- -RLhd . | ../sort-getfattr-output
 	> # file: sub/f
 	> user.test="test"
-	>
+	> 
 	> # file: sub/l
 	> trusted.test="test"
-	>
-
+	> 
+	> # file: sub2/to-sub/f
+	> user.test="test"
+	> 
+	> # file: sub2/to-sub/l
+	> trusted.test="test"
+	> 
 	$ cd ..
 	$ rm -rf d
