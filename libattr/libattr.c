@@ -363,13 +363,13 @@ attr_single(const char *path, attr_multiop_t *op, int flags)
 
 	errno = -EINVAL;
 	flags |= op->am_flags;
-	if (op->am_opcode & ATTR_OP_GET)
+	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_get(path, op->am_attrname, op->am_attrvalue,
 				&op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_SET)
+	else if (op->am_opcode == ATTR_OP_SET)
 		r = attr_set(path, op->am_attrname, op->am_attrvalue,
 				op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_REMOVE)
+	else if (op->am_opcode == ATTR_OP_REMOVE)
 		r = attr_remove(path, op->am_attrname, flags);
 	return r;
 }
@@ -381,13 +381,13 @@ attr_singlef(const int fd, attr_multiop_t *op, int flags)
 
 	errno = -EINVAL;
 	flags |= op->am_flags;
-	if (op->am_opcode & ATTR_OP_GET)
+	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_getf(fd, op->am_attrname, op->am_attrvalue,
 				&op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_SET)
+	else if (op->am_opcode == ATTR_OP_SET)
 		r = attr_setf(fd, op->am_attrname, op->am_attrvalue,
 				op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_REMOVE)
+	else if (op->am_opcode == ATTR_OP_REMOVE)
 		r = attr_removef(fd, op->am_attrname, flags);
 	return r;
 }
