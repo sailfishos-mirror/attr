@@ -19,7 +19,7 @@
 TOPDIR = ..
 include $(TOPDIR)/include/builddefs
 
-LSRCFILES = INSTALL PORTING CHANGES COPYING
+LSRCFILES = INSTALL PORTING CHANGES COPYING COPYING.LGPL
 LDIRT = *.gz
 
 default: $(SUBDIRS) CHANGES.gz
@@ -38,6 +38,7 @@ ifeq ($(PKG_DISTRIBUTION), debian)
 	$(INSTALL) -S CHANGES.gz $(PKG_DOC_DIR)/changelog.gz
 else
 	$(INSTALL) -m 644 COPYING $(PKG_DOC_DIR)
+	$(INSTALL) -m 644 COPYING.LGPL $(PKG_DOC_DIR)
 endif
 
 install-dev install-lib: $(SUBDIRS)
