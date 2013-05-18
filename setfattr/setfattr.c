@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include <locale.h>
 #include <ctype.h>
+#include <libgen.h>
 
 #include <attr/xattr.h>
 #include "config.h"
