@@ -104,19 +104,26 @@ int
 attr_get(const char *path, const char *attrname, char *attrvalue,
 	 int *valuelength, int flags)
 {
+	ssize_t (*get)(const char *, const char *, void *, size_t) =
+		flags & ATTR_DONTFOLLOW ? lgetxattr : getxattr;
 	int c, compat;
 	char name[MAXNAMELEN+16];
 
 	for (compat = 0; compat < 2; compat++) {
 		if ((c = api_convert(name, attrname, flags, compat)) < 0)
 			return c;
-		if (flags & ATTR_DONTFOLLOW)
-			c = lgetxattr(path, name, attrvalue, *valuelength);
-		else
-			c =  getxattr(path, name, attrvalue, *valuelength);
+		c = get(path, name, attrvalue, *valuelength);
 		if (c < 0 && (errno == ENOATTR || errno == ENOTSUP))
 			continue;
 		break;
+	}
+	if (c < 0 && errno == ERANGE) {
+		int size = get(path, name, NULL, 0);
+		if (size >= 0) {
+			*valuelength = size;
+			errno = E2BIG;
+		}
+		return c;
 	}
 	if (c < 0)
 		return c;
@@ -138,6 +145,14 @@ attr_getf(int fd, const char *attrname, char *attrvalue,
 		if (c < 0 && (errno == ENOATTR || errno == ENOTSUP))
 			continue;
 		break;
+	}
+	if (c < 0 && errno == ERANGE) {
+		int size = fgetxattr(fd, name, NULL, 0);
+		if (size >= 0) {
+			*valuelength = size;
+			errno = E2BIG;
+		}
+		return c;
 	}
 	if (c < 0)
 		return c;
