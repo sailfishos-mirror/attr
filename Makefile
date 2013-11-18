@@ -28,6 +28,8 @@ CONFIGURE = \
 	configure config.guess config.sub \
 	ltmain.sh m4/libtool.m4 m4/ltoptions.m4 m4/ltsugar.m4 \
 	m4/ltversion.m4 m4/lt~obsolete.m4
+SRCFILES = \
+	xattr.conf
 LSRCFILES = \
 	configure.ac Makepkgs install-sh exports README VERSION \
 	$(CONFIGURE)
@@ -92,6 +94,8 @@ include/config.h: include/builddefs
 install: default $(addsuffix -install,$(SUBDIRS))
 	$(INSTALL) -m 755 -d $(PKG_DOC_DIR)
 	$(INSTALL) -m 644 README $(PKG_DOC_DIR)
+	$(INSTALL) -m 755 -d $(PKG_CONF_DIR)
+	$(INSTALL) -m 644 xattr.conf $(PKG_CONF_DIR)
 
 install-dev: default $(addsuffix -install-dev,$(SUBDIRS))
 

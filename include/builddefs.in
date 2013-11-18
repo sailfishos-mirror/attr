@@ -48,6 +48,7 @@ PKG_INC_DIR	= @includedir@/attr
 PKG_MAN_DIR	= @mandir@
 PKG_DOC_DIR	= @datadir@/doc/@pkg_name@
 PKG_LOCALE_DIR	= @datadir@/locale
+PKG_CONF_DIR	= @sysconfdir@
 
 CC		= @cc@
 AWK		= @awk@
