@@ -10,11 +10,6 @@
 /attr-*
 /attr/attr
 /autom4te.cache/
-/build/rpm/*.rpm
-/build/rpm/attr.spec
-/build/rpm/rpm-*.rc
-/build/rpm/rpmfiles*
-/build/rpm/rpmmacros
 /config.guess
 /config.log
 /config.status
