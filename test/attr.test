@@ -139,7 +139,7 @@ Test extended attribute block sharing
 
 	$ touch f g h
 	$ setfattr -n user.novalue f g h
-	$ getfattr f g h | ../sort-getfattr-output
+	$ getfattr f g h | sort-getfattr-output
 	> # file: f
 	> user.novalue
 	>
@@ -151,7 +151,7 @@ Test extended attribute block sharing
 	>
 
 	$ setfattr -n user.name -v value f
-	$ getfattr f g h | ../sort-getfattr-output
+	$ getfattr f g h | sort-getfattr-output
 	> # file: f
 	> user.name
 	> user.novalue
@@ -163,7 +163,7 @@ Test extended attribute block sharing
 	> user.novalue
 	>
 
-	$ getfattr -d f g h | ../sort-getfattr-output
+	$ getfattr -d f g h | sort-getfattr-output
 	> # file: f
 	> user.name="value"
 	> user.novalue
@@ -176,7 +176,7 @@ Test extended attribute block sharing
 	> 
 
 	$ setfattr -n user.name -v value g
-	$ getfattr f g h | ../sort-getfattr-output
+	$ getfattr f g h | sort-getfattr-output
 	> # file: f
 	> user.name
 	> user.novalue
@@ -190,7 +190,7 @@ Test extended attribute block sharing
 	>
 
 	$ setfattr -x user.novalue h
-	$ getfattr f g h | ../sort-getfattr-output
+	$ getfattr f g h | sort-getfattr-output
 	> # file: f
 	> user.name
 	> user.novalue
@@ -211,7 +211,7 @@ Attributes of symlinks vs. the files pointed to
 	$ setfattr -h -n user.filename -v l l
 	> setfattr: l: Operation not permitted
 	
-	$ getfattr -d f l | ../sort-getfattr-output
+	$ getfattr -d f l | sort-getfattr-output
 	> # file: f
 	> user.filename="l"
 	> 
@@ -276,7 +276,7 @@ Tests for proper path recursion reported by Tony Ernst <tee@sgi.com> bnc#457660
 	$ setfattr -n "user.9" 1/2/3
 	$ setfattr -n "user.a" 1/2/3
 
-	$ getfattr -h -L -R -m '.' -e hex 1 | grep -v selinux | ./sort-getfattr-output
+	$ getfattr -h -L -R -m '.' -e hex 1 | grep -v selinux | sort-getfattr-output
 	> # file: 1
 	> user.9
 	> user.a
@@ -290,7 +290,7 @@ Tests for proper path recursion reported by Tony Ernst <tee@sgi.com> bnc#457660
 	> user.a
 	>
 
-	$ getfattr -h -P -R -m '.' -e hex 1/2 | grep -v selinux | ./sort-getfattr-output
+	$ getfattr -h -P -R -m '.' -e hex 1/2 | grep -v selinux | sort-getfattr-output
 	> # file: 1/2
 	> user.9
 	> user.a
@@ -314,7 +314,7 @@ Test for proper recursion of directory structures with -L -P -R
 	$ setfattr -n "user.a" 1/link
 	$ setfattr -n "user.a" 1/sub/sub-file
 	$ setfattr -n "user.a" 1/sub
-	$ getfattr -P -R 1 | ./sort-getfattr-output
+	$ getfattr -P -R 1 | sort-getfattr-output
 	> # file: 1
 	> user.a
 	>
@@ -334,7 +334,7 @@ Test for proper recursion of directory structures with -L -P -R
 	> user.a
 	>
 
-	$ getfattr -R -P 1/sub | ./sort-getfattr-output
+	$ getfattr -R -P 1/sub | sort-getfattr-output
 	> # file: 1/sub
 	> user.a
 	>
@@ -345,7 +345,7 @@ Test for proper recursion of directory structures with -L -P -R
 	> user.a
 	>
 
-	$ getfattr -L -R 1 | ./sort-getfattr-output
+	$ getfattr -L -R 1 | sort-getfattr-output
 	> # file: 1
 	> user.a
 	>
@@ -368,7 +368,7 @@ Test for proper recursion of directory structures with -L -P -R
 	> user.a
 	>
 
-	$ getfattr -R 1/sub/link | ./sort-getfattr-output
+	$ getfattr -R 1/sub/link | sort-getfattr-output
 	> # file: 1/sub/link
 	> user.a
 	>
@@ -376,7 +376,7 @@ Test for proper recursion of directory structures with -L -P -R
 	> user.a
 	>
 
-	$ getfattr -L -R 1/sub/link | ./sort-getfattr-output
+	$ getfattr -L -R 1/sub/link | sort-getfattr-output
 	> # file: 1/sub/link
 	> user.a
 	>
