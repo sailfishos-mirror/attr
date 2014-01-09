@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -28,7 +30,8 @@
 #include <locale.h>
 
 #include <attr/attributes.h>
-#include "config.h"
+
+#include "misc.h"
 
 #define	SETOP		1		/* do a SET operation */
 #define	GETOP		2		/* do a GET operation */
