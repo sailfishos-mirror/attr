@@ -52,6 +52,7 @@ usage(void)
 	exit(1);
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 int
 main(int argc, char **argv)
 {
@@ -256,3 +257,4 @@ main(int argc, char **argv)
 
 	return(0);
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"

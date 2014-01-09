@@ -371,6 +371,7 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
  * apart in userspace and make individual syscalls for each.
  */
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 static int
 attr_single(const char *path, attr_multiop_t *op, int flags)
 {
@@ -406,6 +407,7 @@ attr_singlef(const int fd, attr_multiop_t *op, int flags)
 		r = attr_removef(fd, op->am_attrname, flags);
 	return r;
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 /*
  * Operate on multiple attributes of the same object simultaneously
