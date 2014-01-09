@@ -13,36 +13,46 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-AC_INIT(include/attributes.h)
+
+AC_INIT([attr], [2.4.48], [acl-devel@nongnu.org])
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER(include/config.h)
+AC_CONFIG_HEADER([include/config.h])
 AC_PREFIX_DEFAULT(/usr)
 
-AC_PROG_LIBTOOL
+AM_INIT_AUTOMAKE([-Wall foreign 1.11 dist-xz subdir-objects])
+AM_SILENT_RULES([yes])
 
-AC_ARG_ENABLE(shared,
-[ --enable-shared=[yes/no] Enable use of shared libraries [default=yes]],,
-	enable_shared=yes)
-AC_SUBST(enable_shared)
-
-AC_ARG_ENABLE(gettext,
-[ --enable-gettext=[yes/no] Enable alternate language support [default=yes]],,
-	enable_gettext=yes)
-AC_SUBST(enable_gettext)
-
-AC_ARG_ENABLE(lib64,
-[ --enable-lib64=[yes/no] Enable lib64 support [default=no]],,
-	enable_lib64=no)
-AC_SUBST(enable_lib64)
-
-AC_PACKAGE_GLOBALS(attr)
-AC_PACKAGE_UTILITIES(attr)
-AC_MANUAL_FORMAT
-AC_MULTILIB($enable_lib64)
-
+AC_PROG_CC
+AM_PROG_CC_C_O
+AC_USE_SYSTEM_EXTENSIONS
 AC_C_CONST
 AC_TYPE_MODE_T
 AC_FUNC_ALLOCA
 
-AC_OUTPUT(include/builddefs)
+AM_PROG_AR
+LT_INIT
+
+AM_GNU_GETTEXT_VERSION([0.18.2])
+AM_GNU_GETTEXT([external])
+
+AC_ARG_ENABLE([debug],
+	[AS_HELP_STRING([--enable-debug], [Enable extra debugging])])
+AS_IF([test "x$enable_debug" = "xyes"],
+	[CPPFLAGS="$CPPFLAGS -DDEBUG"],
+	[CPPFLAGS="$CPPFLAGS -DNDEBUG"])
+
+dnl Automatically increment the revision for every release.
+LT_REVISION=$(echo "${PACKAGE_VERSION}" | tr -d .)
+AC_SUBST(LT_REVISION)
+
+AC_CONFIG_COMMANDS([include/attr],
+	[dnl
+	rm -rf include/attr
+	$as_ln_s "$ac_abs_top_srcdir/include" include/attr
+	])
+AC_CONFIG_FILES([
+	Makefile
+	po/Makefile.in
+])
+AC_OUTPUT
