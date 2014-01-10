@@ -1,4 +1,4 @@
-attrinclude_HEADERS += \
+pkginclude_HEADERS += \
 	include/attributes.h \
 	include/error_context.h \
 	include/libattr.h \

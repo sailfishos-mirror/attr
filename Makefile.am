@@ -11,9 +11,7 @@ AM_CPPFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DSYSCONFDIR=\"$(sysconfdir)\"
 
-attrincludedir = $(includedir)/attr
-
-attrinclude_HEADERS =
+pkginclude_HEADERS =
 bin_PROGRAMS =
 lib_LTLIBRARIES =
 noinst_HEADERS =
