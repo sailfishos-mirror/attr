@@ -11,6 +11,9 @@ AM_CPPFLAGS = \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DSYSCONFDIR=\"$(sysconfdir)\"
 
+pkgconfdir = $(libdir)/pkgconfig
+
+pkgconf_DATA = libattr.pc
 pkginclude_HEADERS =
 bin_PROGRAMS =
 lib_LTLIBRARIES =

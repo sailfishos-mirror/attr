@@ -57,6 +57,7 @@ AC_CONFIG_COMMANDS([include/attr],
 	$as_ln_s "$ac_abs_top_srcdir/include" include/attr
 	])
 AC_CONFIG_FILES([
+	libattr.pc
 	Makefile
 	po/Makefile.in
 ])
