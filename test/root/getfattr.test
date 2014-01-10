@@ -1,3 +1,7 @@
+Cry immediately if we are not running as root.
+
+	$ require_root
+
 	$ mkdir d
 	$ cd d
 
