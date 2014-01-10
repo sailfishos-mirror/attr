@@ -24,6 +24,7 @@ dist_man_MANS =
 dist_sysconf_DATA = xattr.conf
 
 include doc/Makemodule.am
+include examples/Makemodule.am
 include include/Makemodule.am
 include libattr/Makemodule.am
 include libmisc/Makemodule.am
