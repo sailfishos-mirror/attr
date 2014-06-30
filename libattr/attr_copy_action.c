@@ -15,7 +15,9 @@
   along with this manual.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#if defined(linux)
 #include <alloca.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
