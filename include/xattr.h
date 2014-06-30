@@ -20,7 +20,18 @@
 #ifndef __XATTR_H__
 #define __XATTR_H__
 
+#if defined(linux)
 #include <features.h>
+#endif
+
+/* Portability non glibc c++ build systems */
+#ifndef __THROW
+# if defined __cplusplus
+#  define __THROW       throw ()
+# else
+#  define __THROW
+# endif
+#endif
 
 #include <errno.h>
 #ifndef ENOATTR
