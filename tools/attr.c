@@ -231,8 +231,8 @@ main(int argc, char **argv)
 			if (error) {
 				perror("attr_list");
 				fprintf(stderr,
-					_("Could not list \"%s\" for %s\n"),
-					attrname, filename);
+					_("Could not list %s\n"),
+					filename);
 				exit(1);
 			}
 
