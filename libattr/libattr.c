@@ -317,7 +317,11 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 			continue;
 		if (attr_list_pack(name, vlength, buffer, buffersize,
 				   &start_offset, &end_offset)) {
-			cursor->opaque[0] = count;
+			if (cursor->opaque[0] == count - 1) {
+				errno = EINVAL;
+				return -1;
+			}
+			cursor->opaque[0] = count - 1;
 			break;
 		}
 	}
@@ -357,7 +361,11 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 			continue;
 		if (attr_list_pack(name, vlength, buffer, buffersize,
 				   &start_offset, &end_offset)) {
-			cursor->opaque[0] = count;
+			if (cursor->opaque[0] == count - 1) {
+				errno = EINVAL;
+				return -1;
+			}
+			cursor->opaque[0] = count - 1;
 			break;
 		}
 	}
