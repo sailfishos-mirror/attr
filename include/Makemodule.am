@@ -6,4 +6,5 @@ pkginclude_HEADERS += \
 
 noinst_HEADERS += \
 	include/misc.h \
+	include/nls.h \
 	include/walk_tree.h

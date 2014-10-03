@@ -40,6 +40,7 @@
 
 #define ERROR_CONTEXT_MACROS
 #include "error_context.h"
+#include "nls.h"
 
 #if !defined(ENOTSUP)
 # define ENOTSUP (-1)

@@ -17,6 +17,7 @@ libattr_la_SOURCES = \
 	libattr/libattr.c \
 	libattr/libattr.h \
 	libattr/syscalls.c
+libattr_la_CFLAGS = -include libattr/libattr.h
 libattr_la_LDFLAGS = \
 	-Wl,--version-script,$(top_srcdir)/exports \
 	-version-info $(LTVERSION)
