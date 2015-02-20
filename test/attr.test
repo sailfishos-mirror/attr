@@ -19,7 +19,7 @@ Try various valid and invalid names
 	$ setfattr -n user.name f
 	$ getfattr -d f
 	> # file: f
-	> user.name
+	> user.name=""
 	> 
 	
 	$ setfattr -x user.name f
@@ -98,8 +98,8 @@ Everything with one file
 	$ getfattr -d f
 	> # file: f
 	> user.longername="longervalue"
-	> user.novalue
-	> user.novalue-yet
+	> user.novalue=""
+	> user.novalue-yet=""
 	> user.short="value"
 	> user.somename="somevalue"
 	> 
@@ -108,7 +108,7 @@ Everything with one file
 	$ getfattr -d f
 	> # file: f
 	> user.longername="longervalue"
-	> user.novalue
+	> user.novalue=""
 	> user.novalue-yet="avalue-now"
 	> user.short="value"
 	> user.somename="somevalue"
@@ -122,7 +122,7 @@ Everything with one file
 	$ getfattr -d f
 	> # file: f
 	> user.longername="longervalue"
-	> user.novalue
+	> user.novalue=""
 	> user.novalue-yet="avalue-now"
 	> 
 	
@@ -166,13 +166,13 @@ Test extended attribute block sharing
 	$ getfattr -d f g h | sort-getfattr-output
 	> # file: f
 	> user.name="value"
-	> user.novalue
+	> user.novalue=""
 	> 
 	> # file: g
-	> user.novalue
+	> user.novalue=""
 	> 
 	> # file: h
-	> user.novalue
+	> user.novalue=""
 	> 
 
 	$ setfattr -n user.name -v value g
@@ -239,6 +239,16 @@ Tests for file name that contain special characters
 	>
 
 	$ rm "f "
+
+Tests for empty attribute values
+
+	$ touch f
+	$ setfattr -n user.name -v '' f
+	$ getfattr -d f
+	> # file: f
+	> user.name=""
+	>
+	$ rm f
 
 Tests for attribute names that contains special characters
 

@@ -277,7 +277,7 @@ int print_attribute(const char *path, const char *name, int *header_printed)
 
 	if (opt_value_only)
 		fwrite(value, length, 1, stdout);
-	else if (length) {
+	else if (opt_dump) {
 		const char *enc = encode(value, &length);
 		
 		if (enc)

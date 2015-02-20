@@ -289,6 +289,8 @@ const char *decode(const char *value, size_t *size)
 	static char *decoded;
 	static size_t decoded_size;
 
+	if (*size == 0)
+		return "";
 	if (value[0] == '0' && (value[1] == 'x' || value[1] == 'X')) {
 		const char *v = value+2, *end = value + *size;
 		char *d;
