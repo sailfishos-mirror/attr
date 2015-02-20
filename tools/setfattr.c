@@ -42,6 +42,7 @@ struct option long_options[] = {
 	{ "value",		1, 0, 'v' },
 	{ "no-dereference",	0, 0, 'h' },
 	{ "restore",		1, 0, 'B' },
+	{ "raw",		0, 0, CHAR_MAX + 1 },
 	{ "version",		0, 0, 'V' },
 	{ "help",		0, 0, 'H' },
 	{ NULL,			0, 0, 0 }
@@ -53,6 +54,7 @@ int opt_set;  /* set an attribute */
 int opt_remove;  /* remove an attribute */
 int opt_restore;  /* restore has been run */
 int opt_deref = 1;  /* dereference symbolic links */
+int opt_raw;  /* attribute value is not encoded */
 
 int had_errors;
 const char *progname;
@@ -182,6 +184,7 @@ void help(void)
 "  -v, --value=value       use value as the attribute value\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
 "      --restore=file      restore extended attributes\n"
+"      --raw               attribute value is not encoded\n"
 "      --version           print version and exit\n"
 "      --help              this help text\n"));
 }
@@ -215,6 +218,10 @@ int main(int argc, char *argv[])
 				if (opt_value || opt_remove)
 					goto synopsis;
 				opt_value = optarg;
+				break;
+
+			case CHAR_MAX + 1:
+				opt_raw = 1;
 				break;
 
 			case 'x':  /* remove attribute */
@@ -266,7 +273,8 @@ int do_set(const char *path, const char *name, const char *value)
 
 	if (value) {
 		size = strlen(value);
-		value = decode(value, &size);
+		if (!opt_raw)
+			value = decode(value, &size);
 		if (!value)
 			return 1;
 	}
