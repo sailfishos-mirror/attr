@@ -92,8 +92,6 @@ Everything with one file
 	$ setfattr -n user.longername -v longervalue f
 	$ setfattr -n user.short -v value f
 	$ setfattr -n user.novalue-yet f
-	$ ls -s f
-	> 4 f
 	
 	$ getfattr -d f
 	> # file: f
@@ -130,8 +128,6 @@ Everything with one file
 	$ setfattr -x user.novalue f
 	$ setfattr -x user.novalue-yet f
 	$ getfattr -d f
-	$ ls -s f
-	> 0 f
 	
 	$ rm f
 
