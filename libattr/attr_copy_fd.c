@@ -22,16 +22,13 @@
 #endif
 
 #include <sys/types.h>
+# include <sys/xattr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 
 #if defined(HAVE_ALLOCA_H)
 # include <alloca.h>
-#endif
-
-#if defined(HAVE_ATTR_XATTR_H)
-# include <attr/xattr.h>
 #endif
 
 #if defined(HAVE_ATTR_LIBATTR_H)

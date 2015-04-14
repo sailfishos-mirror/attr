@@ -22,6 +22,10 @@
 extern "C" {
 #endif
 
+#ifndef ENOATTR
+# define ENOATTR ENODATA
+#endif
+
 /*
  *	An almost-IRIX-compatible extended attributes API
  *	(the IRIX attribute "list" operation is missing, added ATTR_SECURE).

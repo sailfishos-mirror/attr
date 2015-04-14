@@ -1,8 +1,7 @@
 pkginclude_HEADERS += \
 	include/attributes.h \
 	include/error_context.h \
-	include/libattr.h \
-	include/xattr.h
+	include/libattr.h
 
 noinst_HEADERS += \
 	include/misc.h \

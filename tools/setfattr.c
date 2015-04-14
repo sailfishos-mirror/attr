@@ -27,8 +27,9 @@
 #include <locale.h>
 #include <ctype.h>
 #include <libgen.h>
+#include <sys/xattr.h>
+#include <sys/errno.h>
 
-#include <attr/xattr.h>
 #include "config.h"
 #include "misc.h"
 

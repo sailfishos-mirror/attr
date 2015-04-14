@@ -21,9 +21,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/xattr.h>
 
-#include <attr/xattr.h>
 #include <attr/attributes.h>
+
+#ifndef ENOATTR
+# define ENOATTR ENODATA
+#endif
 
 #undef MAXNAMELEN
 #define MAXNAMELEN 256

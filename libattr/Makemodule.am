@@ -15,8 +15,7 @@ libattr_la_SOURCES = \
 	libattr/attr_copy_fd.c \
 	libattr/attr_copy_file.c \
 	libattr/libattr.c \
-	libattr/libattr.h \
-	libattr/syscalls.c
+	libattr/libattr.h
 libattr_la_CFLAGS = -include libattr/libattr.h
 libattr_la_LDFLAGS = \
 	-Wl,--version-script,$(top_srcdir)/exports \

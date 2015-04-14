@@ -28,8 +28,8 @@
 #include <regex.h>
 #include <locale.h>
 #include <libgen.h>
+#include <sys/xattr.h>
 
-#include <attr/xattr.h>
 #include "config.h"
 #include "walk_tree.h"
 #include "misc.h"
