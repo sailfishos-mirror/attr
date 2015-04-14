@@ -1,5 +1,0 @@
-dist_man_MANS += \
-	man/man2/getxattr.2 \
-	man/man2/listxattr.2 \
-	man/man2/removexattr.2 \
-	man/man2/setxattr.2

@@ -36,11 +36,6 @@ LT_INIT
 AM_GNU_GETTEXT_VERSION([0.18.2])
 AM_GNU_GETTEXT([external])
 
-dnl Most people get these man(2) pages from the system now.
-AC_ARG_ENABLE([man2],
-	[AS_HELP_STRING([--enable-man2], [Install man(2) pages])])
-AM_CONDITIONAL([ENABLE_MAN2], [test "x$enable_man2" = "xyes"])
-
 AC_ARG_ENABLE([debug],
 	[AS_HELP_STRING([--enable-debug], [Enable extra debugging])])
 AS_IF([test "x$enable_debug" = "xyes"],

@@ -1,7 +1,4 @@
 include man/man1/Makemodule.am
-if ENABLE_MAN2
-include man/man2/Makemodule.am
-endif
 include man/man3/Makemodule.am
 include man/man5/Makemodule.am
 
