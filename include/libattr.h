@@ -39,6 +39,11 @@ extern int attr_copy_check_permissions(const char *, struct error_context *);
 
 extern int attr_copy_action(const char *, struct error_context *);
 
+extern ssize_t listxattrat(int, const char *, char *, size_t);
+extern ssize_t getxattrat(int, const char *, const char *, void *, size_t);
+extern ssize_t setxattrat(int, const char *, const char *, void *, size_t, int);
+extern ssize_t removexattrat(int, const char *, const char *);
+
 #ifdef __cplusplus
 }
 #endif

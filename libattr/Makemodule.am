@@ -14,6 +14,10 @@ libattr_la_SOURCES = \
 	libattr/attr_copy_check.c \
 	libattr/attr_copy_fd.c \
 	libattr/attr_copy_file.c \
+	libattr/listxattrat.c \
+	libattr/getxattrat.c \
+	libattr/setxattrat.c \
+	libattr/removexattrat.c \
 	libattr/libattr.c \
 	libattr/libattr.h
 libattr_la_CFLAGS = -include libattr/libattr.h

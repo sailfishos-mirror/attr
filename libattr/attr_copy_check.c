@@ -18,6 +18,7 @@
 /* Copy extended attributes between files - default check callback */
 
 #include <string.h>
+#include <sys/types.h>
 #include "error_context.h"
 #include "attr/libattr.h"
 
