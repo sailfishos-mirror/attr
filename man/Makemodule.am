@@ -1,6 +1,5 @@
 include man/man1/Makemodule.am
 include man/man3/Makemodule.am
-include man/man5/Makemodule.am
 
 # Support installing symlinks for man pages that cover multiple interfaces.
 install-data-hook:
