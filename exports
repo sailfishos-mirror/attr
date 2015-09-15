@@ -40,6 +40,9 @@ ATTR_1.0 {
 	attr_removef;
 	attr_set;
 	attr_setf;
+
+    local:
+	*;
 };
 
 ATTR_1.1 {
