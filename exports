@@ -55,3 +55,8 @@ ATTR_1.2 {
 	attr_list;
 	attr_listf;
 } ATTR_1.1;
+
+ATTR_1.3 {
+    global:
+	attr_copy_action;
+} ATTR_1.2;
