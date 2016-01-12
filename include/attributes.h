@@ -22,6 +22,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #ifndef ENOATTR
 # define ENOATTR ENODATA
 #endif
@@ -73,7 +75,7 @@ typedef struct attrlist {
  * al_offset[i] entry points to.
  */
 typedef struct attrlist_ent {	/* data from attr_list() */
-	u_int32_t	a_valuelen;	/* number bytes in value of attr */
+	uint32_t	a_valuelen;	/* number bytes in value of attr */
 	char		a_name[1];	/* attr name (NULL terminated) */
 } attrlist_ent_t;
 
@@ -94,7 +96,7 @@ typedef struct attrlist_ent {	/* data from attr_list() */
  * operation on a cursor is to bzero() it.
  */
 typedef struct attrlist_cursor {
-	u_int32_t	opaque[4];	/* an opaque cookie */
+	uint32_t	opaque[4];	/* an opaque cookie */
 } attrlist_cursor_t;
 
 /*

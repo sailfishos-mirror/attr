@@ -72,9 +72,9 @@ The contents of an \f4attrlist_t\fP structure include the following members:
 .nf
 .ft 4
 .ta 9n 22n
-__int32_t al_count; /\(** number of entries in attrlist \(**/
-__int32_t al_more; /\(** T/F: more attrs (do syscall again) \(**/
-__int32_t al_offset[1]; /\(** byte offsets of attrs [var-sized] \(**/
+int32_t al_count; /\(** number of entries in attrlist \(**/
+int32_t al_more; /\(** T/F: more attrs (do syscall again) \(**/
+int32_t al_offset[1]; /\(** byte offsets of attrs [var-sized] \(**/
 .ft 1
 .fi
 .RE
@@ -113,7 +113,7 @@ include the following members:
 .nf
 .ft 4
 .ta 9n 22n
-u_int32_t a_valuelen; /\(** number bytes in value of attr \(**/
+uint32_t a_valuelen; /\(** number bytes in value of attr \(**/
 char a_name[]; /\(** attr name (NULL terminated) \(**/
 .ft 1
 .fi
