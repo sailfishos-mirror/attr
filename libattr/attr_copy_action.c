@@ -15,6 +15,8 @@
   along with this manual.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
+
 #if defined(linux)
 #include <alloca.h>
 #endif

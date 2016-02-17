@@ -20,6 +20,8 @@
  * Actual syscall wrappers are long gone to libc.
  */
 
+#include "config.h"
+
 #include <sys/xattr.h>
 
 int libattr_setxattr(const char *path, const char *name,

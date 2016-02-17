@@ -19,6 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
+
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +32,6 @@
 #include <sys/xattr.h>
 #include <sys/errno.h>
 
-#include "config.h"
 #include "misc.h"
 
 #define CMD_LINE_OPTIONS "n:x:v:h"
