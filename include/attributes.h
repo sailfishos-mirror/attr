@@ -125,10 +125,10 @@ typedef struct attr_multiop {
  * be set to the actual number of bytes used in the value buffer upon return.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_get (const char *__path, const char *__attrname,
+EXPORT int attr_get (const char *__path, const char *__attrname,
 			char *__attrvalue, int *__valuelength, int __flags)
 	__attribute__ ((deprecated ("Use getxattr or lgetxattr instead")));
-extern int attr_getf (int __fd, const char *__attrname, char *__attrvalue,
+EXPORT int attr_getf (int __fd, const char *__attrname, char *__attrvalue,
 			int *__valuelength, int __flags)
 	__attribute__ ((deprecated ("Use fgetxattr instead")));
 
@@ -136,11 +136,11 @@ extern int attr_getf (int __fd, const char *__attrname, char *__attrvalue,
  * Set the value of an attribute, creating the attribute if necessary.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_set (const char *__path, const char *__attrname,
+EXPORT int attr_set (const char *__path, const char *__attrname,
 			const char *__attrvalue, const int __valuelength,
 			int __flags)
 	__attribute__ ((deprecated ("Use setxattr or lsetxattr instead")));
-extern int attr_setf (int __fd, const char *__attrname,
+EXPORT int attr_setf (int __fd, const char *__attrname,
 			const char *__attrvalue, const int __valuelength,
 			int __flags)
 	__attribute__ ((deprecated ("Use fsetxattr instead")));
@@ -149,10 +149,10 @@ extern int attr_setf (int __fd, const char *__attrname,
  * Remove an attribute.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_remove (const char *__path, const char *__attrname,
+EXPORT int attr_remove (const char *__path, const char *__attrname,
 			int __flags)
 	__attribute__ ((deprecated ("Use removexattr or lremovexattr instead")));
-extern int attr_removef (int __fd, const char *__attrname, int __flags)
+EXPORT int attr_removef (int __fd, const char *__attrname, int __flags)
 	__attribute__ ((deprecated ("Use fremovexattr instead")));
 
 /*
@@ -162,10 +162,10 @@ extern int attr_removef (int __fd, const char *__attrname, int __flags)
  * fit into the buffer on the first system call.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-int attr_list(const char *__path, char *__buffer, const int __buffersize,
+EXPORT int attr_list(const char *__path, char *__buffer, const int __buffersize,
 		int __flags, attrlist_cursor_t *__cursor)
 	__attribute__ ((deprecated ("Use listxattr or llistxattr instead")));
-int attr_listf(int __fd, char *__buffer, const int __buffersize,
+EXPORT int attr_listf(int __fd, char *__buffer, const int __buffersize,
 		int __flags, attrlist_cursor_t *__cursor)
 	__attribute__ ((deprecated ("Use flistxattr instead")));
 
@@ -186,10 +186,10 @@ int attr_listf(int __fd, char *__buffer, const int __buffersize,
  * the corresponding "simple" attribute interface.  For example: the args
  * to a ATTR_OP_GET are the same as the args to an attr_get() call.
  */
-extern int attr_multi (const char *__path, attr_multiop_t *__oplist,
+EXPORT int attr_multi (const char *__path, attr_multiop_t *__oplist,
 			int __count, int __flags)
 	__attribute__ ((deprecated ("Use getxattr, setxattr, listxattr, removexattr instead")));
-extern int attr_multif (int __fd, attr_multiop_t *__oplist,
+EXPORT int attr_multif (int __fd, attr_multiop_t *__oplist,
 			int __count, int __flags)
 	__attribute__ ((deprecated ("Use getxattr, setxattr, listxattr, removexattr instead")));
 

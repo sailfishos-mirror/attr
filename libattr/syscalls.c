@@ -24,6 +24,10 @@
 
 #include <sys/xattr.h>
 
+#ifdef HAVE_VISIBILITY_ATTRIBUTE
+# pragma GCC visibility push(default)
+#endif
+
 int libattr_setxattr(const char *path, const char *name,
 		     void *value, size_t size, int flags)
 {
@@ -89,3 +93,7 @@ int libattr_fremovexattr(int filedes, const char *name)
 {
 	return fremovexattr(filedes, name);
 }
+
+#ifdef HAVE_VISIBILITY_ATTRIBUTE
+# pragma GCC visibility pop
+#endif
