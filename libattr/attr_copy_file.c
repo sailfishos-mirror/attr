@@ -62,7 +62,7 @@ attr_copy_file(const char *src_path, const char *dst_path,
 	       struct error_context *ctx)
 {
 #if defined(HAVE_LISTXATTR) && defined(HAVE_GETXATTR) && defined(HAVE_SETXATTR)
-  	int ret = 0;
+	int ret = 0;
 	ssize_t size;
 	char *names = NULL, *end_names, *name, *value = NULL;
 	unsigned int setxattr_ENOTSUP = 0;
