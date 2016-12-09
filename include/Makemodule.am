@@ -24,3 +24,8 @@ install-error_context_h: include/error_context.h
 install-libattr_h: include/libattr.h
 	$(SUBST_INSTALL_HEADER) "$<" "$(DESTDIR)$(pkgincludedir)"
 install-data-local: install-attributes_h install-error_context_h install-libattr_h
+uninstall-local:
+	-rm -f \
+		"$(DESTDIR)$(pkgincludedir)/attributes.h" \
+		"$(DESTDIR)$(pkgincludedir)/error_context.h" \
+		"$(DESTDIR)$(pkgincludedir)/libattr.h"
