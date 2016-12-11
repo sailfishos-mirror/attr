@@ -30,7 +30,7 @@
 #include <ctype.h>
 #include <libgen.h>
 #include <sys/xattr.h>
-#include <sys/errno.h>
+#include <errno.h>
 
 #include "misc.h"
 
