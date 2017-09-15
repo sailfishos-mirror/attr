@@ -157,6 +157,10 @@ main(int argc, char **argv)
 	 */
 	switch (opflag) {
 	case SETOP:
+		if (!attrname) {
+		  fprintf(stderr, _("-V only allowed with -s\n"));
+		  usage();
+		}
 		if (attrvalue == NULL) {
 			attrvalue = malloc(ATTR_MAX_VALUELEN);
 			if (attrvalue == NULL) {
