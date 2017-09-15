@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: attr\n"
 "Report-Msgid-Bugs-To: acl-devel@nongnu.org\n"
-"POT-Creation-Date: 2014-01-09 16:19-0500\n"
+"POT-Creation-Date: 2017-09-15 15:13+0200\n"
 "PO-Revision-Date: 2005-10-05 20:02+0200\n"
 "Last-Translator: Guilhelm Panaget <guilhelm.panaget@free.fr>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -26,25 +26,25 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libattr/attr_copy_file.c:80 libattr/attr_copy_file.c:95
-#: libattr/attr_copy_fd.c:82 libattr/attr_copy_fd.c:97
+#: libattr/attr_copy_fd.c:80 libattr/attr_copy_fd.c:95
+#: libattr/attr_copy_file.c:78 libattr/attr_copy_file.c:93
 #, c-format
 msgid "listing attributes of %s"
 msgstr "affichage des attributs de %s"
 
-#: libattr/attr_copy_file.c:115 libattr/attr_copy_file.c:132
-#: libattr/attr_copy_fd.c:117 libattr/attr_copy_fd.c:134
+#: libattr/attr_copy_fd.c:115 libattr/attr_copy_fd.c:132
+#: libattr/attr_copy_file.c:113 libattr/attr_copy_file.c:130
 #, c-format
 msgid "getting attribute %s of %s"
 msgstr "obtention de l'attribut %s de %s"
 
-#: libattr/attr_copy_file.c:145 libattr/attr_copy_file.c:164
-#: libattr/attr_copy_fd.c:148 libattr/attr_copy_fd.c:166
+#: libattr/attr_copy_fd.c:145 libattr/attr_copy_fd.c:164
+#: libattr/attr_copy_file.c:143 libattr/attr_copy_file.c:162
 #, c-format
 msgid "setting attributes for %s"
 msgstr "positionnement des attributs de %s"
 
-#: libattr/attr_copy_file.c:152 libattr/attr_copy_fd.c:154
+#: libattr/attr_copy_fd.c:152 libattr/attr_copy_file.c:150
 #, c-format
 msgid "setting attribute %s for %s"
 msgstr "positionnement de l'attribut %s de %s"
@@ -113,7 +113,7 @@ msgstr "Impossible de supprimer « %s » de %s\n"
 
 #: tools/attr.c:234
 #, fuzzy, c-format
-msgid "Could not list \"%s\" for %s\n"
+msgid "Could not list %s\n"
 msgstr "Impossible d'affecter « %s » à %s\n"
 
 #: tools/attr.c:244
@@ -126,26 +126,26 @@ msgstr "L'attribut « %s » avait une valeur de %d octets pour %s :\n"
 msgid "At least one of -s, -g, -r, or -l is required\n"
 msgstr "Au moins un des commutateurs -s, -g ou -r est requis.\n"
 
-#: tools/getfattr.c:98 tools/setfattr.c:71
+#: tools/getfattr.c:99 tools/setfattr.c:75
 msgid "No such attribute"
 msgstr "Attribut inconnu"
 
-#: tools/getfattr.c:259
+#: tools/getfattr.c:260
 #, c-format
 msgid "%s: Removing leading '/' from absolute path names\n"
 msgstr "%s: Suppression des « / » en tête des chemins absolus\n"
 
-#: tools/getfattr.c:377
+#: tools/getfattr.c:378
 #, c-format
 msgid "%s %s -- get extended attributes\n"
 msgstr "%s %s -- obtenir les attributs étendus\n"
 
-#: tools/getfattr.c:379 tools/setfattr.c:177
+#: tools/getfattr.c:380 tools/setfattr.c:181
 #, c-format
 msgid "Usage: %s %s\n"
 msgstr "Utilisation : %s %s\n"
 
-#: tools/getfattr.c:382
+#: tools/getfattr.c:383
 #, c-format
 msgid ""
 "  -n, --name=name         get the named extended attribute value\n"
@@ -178,12 +178,12 @@ msgstr ""
 "     --version          afficher la version et quitter\n"
 "     --help             afficher cette aide\n"
 
-#: tools/getfattr.c:478
+#: tools/getfattr.c:479
 #, c-format
 msgid "%s: invalid regular expression \"%s\"\n"
 msgstr "%s: expression rationnelle non valable « %s »\n"
 
-#: tools/getfattr.c:492
+#: tools/getfattr.c:493
 #, c-format
 msgid ""
 "Usage: %s %s\n"
@@ -192,36 +192,37 @@ msgstr ""
 "Utilisation : %s %s\n"
 "Taper « %s --help » pour plus d'informations.\n"
 
-#: tools/setfattr.c:125
+#: tools/setfattr.c:129
 #, c-format
 msgid "%s: %s: No filename found in line %d, aborting\n"
 msgstr "%s : %s : la ligne %d ne contient aucun nom de fichier, abandon\n"
 
-#: tools/setfattr.c:129
+#: tools/setfattr.c:133
 #, c-format
 msgid "%s: No filename found in line %d of standard input, aborting\n"
 msgstr ""
 "%s : la ligne %d de l'entrée standard ne contient aucun nom de fichier, "
 "abandon\n"
 
-#: tools/setfattr.c:176
+#: tools/setfattr.c:180
 #, c-format
 msgid "%s %s -- set extended attributes\n"
 msgstr "%s %s -- positionner les attributs étendus\n"
 
-#: tools/setfattr.c:178
+#: tools/setfattr.c:182
 #, c-format
 msgid "       %s %s\n"
 msgstr ""
 
-#: tools/setfattr.c:180
-#, c-format
+#: tools/setfattr.c:184
+#, fuzzy, c-format
 msgid ""
 "  -n, --name=name         set the value of the named extended attribute\n"
 "  -x, --remove=name       remove the named extended attribute\n"
 "  -v, --value=value       use value as the attribute value\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
 "      --restore=file      restore extended attributes\n"
+"      --raw               attribute value is not encoded\n"
 "      --version           print version and exit\n"
 "      --help              this help text\n"
 msgstr ""
@@ -233,7 +234,7 @@ msgstr ""
 "      --version           afficher la version et quitter\n"
 "      --help              afficher cette aide\n"
 
-#: tools/setfattr.c:255
+#: tools/setfattr.c:264
 #, fuzzy, c-format
 msgid ""
 "Usage: %s %s\n"
