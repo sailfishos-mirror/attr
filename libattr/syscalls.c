@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#include <unistd.h>
+#include <sys/syscall.h>
 #include <sys/xattr.h>
 
 #ifdef HAVE_VISIBILITY_ATTRIBUTE
@@ -31,67 +33,67 @@
 int libattr_setxattr(const char *path, const char *name,
 		     void *value, size_t size, int flags)
 {
-	return setxattr(path, name, value, size, flags);
+	return syscall(__NR_setxattr, path, name, value, size, flags);
 }
 
 int libattr_lsetxattr(const char *path, const char *name,
 		      void *value, size_t size, int flags)
 {
-	return lsetxattr(path, name, value, size, flags);
+	return syscall(__NR_lsetxattr, path, name, value, size, flags);
 }
 
 int libattr_fsetxattr(int filedes, const char *name,
 		      void *value, size_t size, int flags)
 {
-	return fsetxattr(filedes, name, value, size, flags);
+	return syscall(__NR_fsetxattr, filedes, name, value, size, flags);
 }
 
 ssize_t libattr_getxattr(const char *path, const char *name,
 			 void *value, size_t size)
 {
-	return getxattr(path, name, value, size);
+	return syscall(__NR_getxattr, path, name, value, size);
 }
 
 ssize_t libattr_lgetxattr(const char *path, const char *name,
 			  void *value, size_t size)
 {
-	return lgetxattr(path, name, value, size);
+	return syscall(__NR_lgetxattr, path, name, value, size);
 }
 
 ssize_t libattr_fgetxattr(int filedes, const char *name,
 			  void *value, size_t size)
 {
-	return fgetxattr(filedes, name, value, size);
+	return syscall(__NR_fgetxattr, filedes, name, value, size);
 }
 
 ssize_t libattr_listxattr(const char *path, char *list, size_t size)
 {
-	return listxattr(path, list, size);
+	return syscall(__NR_listxattr, path, list, size);
 }
 
 ssize_t libattr_llistxattr(const char *path, char *list, size_t size)
 {
-	return llistxattr(path, list, size);
+	return syscall(__NR_llistxattr, path, list, size);
 }
 
 ssize_t libattr_flistxattr(int filedes, char *list, size_t size)
 {
-	return flistxattr(filedes, list, size);
+	return syscall(__NR_flistxattr, filedes, list, size);
 }
 
 int libattr_removexattr(const char *path, const char *name)
 {
-	return removexattr(path, name);
+	return syscall(__NR_removexattr, path, name);
 }
 
 int libattr_lremovexattr(const char *path, const char *name)
 {
-	return lremovexattr(path, name);
+	return syscall(__NR_lremovexattr, path, name);
 }
 
 int libattr_fremovexattr(int filedes, const char *name)
 {
-	return fremovexattr(filedes, name);
+	return syscall(__NR_fremovexattr, filedes, name);
 }
 
 #ifdef HAVE_VISIBILITY_ATTRIBUTE
