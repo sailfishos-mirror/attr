@@ -391,7 +391,7 @@ attr_single(const char *path, attr_multiop_t *op, int flags)
 {
 	int r = -1;
 
-	errno = -EINVAL;
+	errno = EINVAL;
 	flags |= op->am_flags;
 	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_get(path, op->am_attrname, op->am_attrvalue,
@@ -409,7 +409,7 @@ attr_singlef(const int fd, attr_multiop_t *op, int flags)
 {
 	int r = -1;
 
-	errno = -EINVAL;
+	errno = EINVAL;
 	flags |= op->am_flags;
 	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_getf(fd, op->am_attrname, op->am_attrvalue,
