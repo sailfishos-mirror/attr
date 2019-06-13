@@ -110,6 +110,10 @@ int well_enough_printable(const char *value, size_t size)
 {
 	size_t n, nonpr = 0;
 
+	/* Don't count the NULL terminator if there is one */
+	if (size && !value[size - 1])
+		size--;
+
 	for (n=0; n < size; n++)
 		if (!isprint(*value++))
 			nonpr++;
