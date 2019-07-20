@@ -1,5 +1,5 @@
 CFLAGS = -g -Wall -I../include
-LDFLAGS = -lattr
+LDLIBS = -lattr
 
 PROGS = copyattr
 
