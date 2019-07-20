@@ -94,7 +94,7 @@ struct error_context ctx = { error, quote, quote_free };
  */
 static int is_user_attr(const char *name, struct error_context *ctx)
 {
-	return strcmp(name, "user.") == 0;
+	return strncmp(name, "user.", 5) == 0;
 }
 
 int
