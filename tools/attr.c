@@ -228,7 +228,7 @@ main(int argc, char **argv)
 			perror("malloc");
 			exit(1);
 		}
-		bzero((char *)&cursor, sizeof(cursor));
+		memset(&cursor, 0, sizeof(cursor));
 		do {
 			error = attr_list(filename, buffer, BUFSIZE,
 					  attrflags, &cursor);

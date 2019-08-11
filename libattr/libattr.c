@@ -298,7 +298,7 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 		errno = EINVAL;
 		return -1;
 	}
-	bzero(buffer, sizeof(attrlist_t));
+	memset(buffer, 0, sizeof(attrlist_t));
 
 	if (flags & ATTR_DONTFOLLOW)
 		length = llistxattr(path, lbuf, sizeof(lbuf) - 1);
@@ -349,7 +349,7 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 		errno = EINVAL;
 		return -1;
 	}
-	bzero(buffer, sizeof(attrlist_t));
+	memset(buffer, 0, sizeof(attrlist_t));
 
 	length = flistxattr(fd, lbuf, sizeof(lbuf) - 1);
 	if (length < 0)

@@ -91,9 +91,9 @@ typedef struct attrlist_ent {	/* data from attr_list() */
  * Implement a "cursor" for use in successive attr_list() calls.
  * It provides a way to find the last attribute that was returned in the
  * last attr_list() call so that we can get the next one without missing
- * any.  This should be bzero()ed before use and whenever it is desired to
+ * any.  This should be zeroed before use and whenever it is desired to
  * start over from the beginning of the attribute list.  The only valid
- * operation on a cursor is to bzero() it.
+ * operation on a cursor is to zero it.
  */
 typedef struct attrlist_cursor {
 	uint32_t	opaque[4];	/* an opaque cookie */
