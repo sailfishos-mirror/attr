@@ -21,5 +21,4 @@ install-data-hook:
 			echo $(LN_S) $$dst $$ln; \
 			$(LN_S) $$dst $$ln; \
 		done; \
-	done; \
-	rmdir */ 2>/dev/null || :
+	done
