@@ -94,6 +94,18 @@ Print help explaining the command line options.
 End of command line options.
 All remaining parameters are interpreted as file names, even if they
 start with a dash character.
+.SH EXAMPLES
+Add extended attribute to user namespace:
+.PP
+.nf
+.B "$ setfattr -n user.foo -v bar file.txt
+.fi
+.PP
+To add md5sum of the file as an extended attribute:
+.PP
+.nf
+.B "# setfattr -n trusted.md5sum -v d41d8cd98f00b204e00998ecf8427e file.txt
+.fi
 .SH AUTHOR
 Andreas Gruenbacher,
 .RI < a.gruenbacher@bestbits.at >
