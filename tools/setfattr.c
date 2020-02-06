@@ -2,7 +2,7 @@
   File: setfattr.c
   (Linux Extended Attributes)
 
-  Copyright (C) 2001-2002 Andreas Gruenbacher <a.gruenbacher@bestbits.at>
+  Copyright (C) 2001-2002 Andreas Gruenbacher <andreas.gruenbacher@gmail.com>
   Copyright (C) 2001-2002 Silicon Graphics, Inc.  All Rights Reserved.
 
   This program is free software: you can redistribute it and/or modify it
