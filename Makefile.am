@@ -23,6 +23,9 @@ dist_doc_DATA =
 dist_man_MANS =
 dist_sysconf_DATA = xattr.conf
 
+update-po:
+	$(MAKE) -C po $@
+
 include doc/Makemodule.am
 include examples/Makemodule.am
 include include/Makemodule.am
