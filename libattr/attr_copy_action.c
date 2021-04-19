@@ -155,9 +155,8 @@ fail:
 int
 attr_copy_action(const char *name, struct error_context *ctx)
 {
-	struct attr_action *action = attr_actions;
-
 	if (!attr_parse_attr_conf(ctx)) {
+		struct attr_action *action;
 		for (action = attr_actions; action; action = action->next) {
 			if (!fnmatch(action->pattern, name, 0))
 				return action->action;
