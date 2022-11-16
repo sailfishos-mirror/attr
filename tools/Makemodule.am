@@ -1,4 +1,4 @@
-tools_ldadd = $(LDADD) libattr.la libmisc.la
+tools_ldadd = $(LDADD) libattr.la libmisc.la $(LTLIBINTL)
 
 bin_PROGRAMS += attr
 attr_SOURCES = tools/attr.c

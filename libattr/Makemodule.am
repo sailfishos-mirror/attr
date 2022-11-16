@@ -8,6 +8,9 @@ LT_CURRENT = 2
 LT_AGE = 1
 LTVERSION = $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
+## Since libattr translates its error messages, we have to link libintl.
+## See the AM_GNU_GETTEXT documentation for details.
+libattr_la_LIBADD = $(LTLIBINTL)
 libattr_la_DEPENDENCIES = \
 	exports
 if OS_LINUX
