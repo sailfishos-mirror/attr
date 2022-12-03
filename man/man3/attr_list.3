@@ -36,7 +36,6 @@ attr_list, attr_listf \- list the names of the user attributes of a filesystem o
 .B "int attr_listf (int fd, char \(**buffer, "
 .B "                const int buffersize, int flags,"
 .B "                attrlist_cursor_t \(**cursor);"
-.Op
 .SH DESCRIPTION
 The
 .B attr_list
@@ -65,7 +64,6 @@ must be sufficiently large to hold the appropriate data structures
 plus at least one maximally sized attribute name,
 but cannot be more than ATTR_MAX_VALUELEN (currently 64KB) bytes in length.
 .PP
-.Op c p a
 The contents of an \f4attrlist_t\fP structure include the following members:
 .P
 .RS 3
@@ -117,7 +115,6 @@ uint32_t a_valuelen; /\(** number bytes in value of attr \(**/
 char a_name[]; /\(** attr name (NULL terminated) \(**/
 .ft 1
 .fi
-.Op
 .RE
 .PP
 The
