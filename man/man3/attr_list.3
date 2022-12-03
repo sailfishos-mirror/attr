@@ -132,11 +132,11 @@ call should be used to get the value.
 The
 .B attr_list
 interface tells the calling process how large of a buffer
-it must have in order to get the attribute\'s value.
+it must have in order to get the attribute's value.
 .PP
 The
 .I flags
-argument can contain the following symbols bitwise OR\'ed together:
+argument can contain the following symbols bitwise OR'ed together:
 .TP
 .SM
 \%ATTR_ROOT
@@ -159,13 +159,13 @@ The default is to follow symbolic links.
 The
 .I cursor
 argument is a pointer to an opaque data structure that the kernel uses
-to track the calling process\'s position in the attribute list.
+to track the calling process's position in the attribute list.
 The only valid operations on a
 .I cursor
 are to pass it into an
 .B attr_list
 function call or to zero it out.
-It should be zero\'ed out before the first
+It should be zero'ed out before the first
 .B attr_list
 call.
 Note that multi-threaded applications may keep more than one
