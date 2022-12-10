@@ -38,7 +38,7 @@
 #define CMD_LINE_OPTIONS "n:de:m:hRLP"
 #define CMD_LINE_SPEC "[-hRLP] [-n name|-d] [-e en] [-m pattern] path..."
 
-struct option long_options[] = {
+static const struct option long_options[] = {
 	{ "name",		1, 0, 'n' },
 	{ "dump",		0, 0, 'd' },
 	{ "encoding",		1, 0, 'e' },

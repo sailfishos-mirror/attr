@@ -38,7 +38,7 @@
 #define CMD_LINE_SPEC1 "{-n name} [-v value] [-h] file..."
 #define CMD_LINE_SPEC2 "{-x name} [-h] file..."
 
-struct option long_options[] = {
+static const struct option long_options[] = {
 	{ "name",		1, 0, 'n' }, 
 	{ "remove",		1, 0, 'x' },
 	{ "value",		1, 0, 'v' },
