@@ -388,7 +388,7 @@ void help(void)
 "  -n, --name=name         get the named extended attribute value\n"
 "  -d, --dump              get all extended attribute values\n"
 "  -e, --encoding=...      encode values (as 'text', 'hex' or 'base64')\n"
-"      --match=pattern     only get attributes with names matching pattern\n"
+"  -m, --match=pattern     only get attributes with names matching pattern\n"
 "      --only-values       print the bare values only\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
 "      --one-file-system   skip files on different filesystems\n"
