@@ -3,3 +3,5 @@ dist_doc_DATA += \
 	doc/COPYING \
 	doc/COPYING.LGPL \
 	doc/PORTING
+EXTRA_DIST += \
+	%D%/INSTALL
