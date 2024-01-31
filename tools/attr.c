@@ -42,7 +42,7 @@
 
 static char *progname;
 
-void
+static void
 usage(void)
 {
 	fprintf(stderr, _(

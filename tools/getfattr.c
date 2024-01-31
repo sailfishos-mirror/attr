@@ -55,19 +55,19 @@ static const struct option long_options[] = {
 	{ NULL,			0, 0, 0 }
 };
 
-int walk_flags = WALK_TREE_DEREFERENCE;
-int opt_dump;  /* dump attribute values (or only list the names) */
-char *opt_name;  /* dump named attributes */
-char *opt_name_pattern = "^user\\.";  /* include only matching names */
-char *opt_encoding;  /* encode values automatically (NULL), or as "text",
-                        "hex", or "base64" */
-char opt_value_only;  /* dump the value only, without any decoration */
-int opt_strip_leading_slash = 1;  /* strip leading '/' from path names */
+static int walk_flags = WALK_TREE_DEREFERENCE;
+static int opt_dump;  /* dump attribute values (or only list the names) */
+static char *opt_name;  /* dump named attributes */
+static char *opt_name_pattern = "^user\\.";  /* include only matching names */
+static char *opt_encoding;  /* encode values automatically (NULL), or as "text",
+                               "hex", or "base64" */
+static char opt_value_only;  /* dump the value only, without any decoration */
+static int opt_strip_leading_slash = 1;  /* strip leading '/' from path names */
 
-const char *progname;
-int absolute_warning;
-int had_errors;
-regex_t name_regex;
+static const char *progname;
+static int absolute_warning;
+static int had_errors;
+static regex_t name_regex;
 
 
 static const char *xquote(const char *str, const char *quote_chars)
@@ -80,19 +80,20 @@ static const char *xquote(const char *str, const char *quote_chars)
 	return q;
 }
 
-int do_getxattr(const char *path, const char *name, void *value, size_t size)
+static int do_getxattr(const char *path, const char *name, void *value,
+		       size_t size)
 {
 	return ((walk_flags & WALK_TREE_DEREFERENCE) ?
 		getxattr : lgetxattr)(path, name, value, size);
 }
 
-int do_listxattr(const char *path, char *list, size_t size)
+static int do_listxattr(const char *path, char *list, size_t size)
 {
 	return ((walk_flags & WALK_TREE_DEREFERENCE) ?
 		listxattr : llistxattr)(path, list, size);
 }
 
-const char *strerror_ea(int err)
+static const char *strerror_ea(int err)
 {
 #ifdef __linux__
 	/* The Linux kernel does not define ENOATTR, but maps it to ENODATA. */
@@ -102,12 +103,12 @@ const char *strerror_ea(int err)
 	return strerror(err);
 }
 
-int pstrcmp(const void *a, const void *b)
+static int pstrcmp(const void *a, const void *b)
 {
 	return strcmp(*(const char **)a, *(const char **)b);
 }
 
-int well_enough_printable(const char *value, size_t size)
+static int well_enough_printable(const char *value, size_t size)
 {
 	size_t n, nonpr = 0;
 
@@ -122,7 +123,7 @@ int well_enough_printable(const char *value, size_t size)
 	return (size >= nonpr*8);  /* no more than 1/8 non-printable chars */
 }
 
-const char *encode(const char *value, size_t *size)
+static const char *encode(const char *value, size_t *size)
 {
 	static char *encoded;
 	static size_t encoded_size;
@@ -229,7 +230,8 @@ const char *encode(const char *value, size_t *size)
 	return encoded;
 }
 
-int print_attribute(const char *path, const char *name, int *header_printed)
+static int print_attribute(const char *path, const char *name,
+			   int *header_printed)
 {
 	static char *value;
 	static size_t value_size;
@@ -294,7 +296,7 @@ int print_attribute(const char *path, const char *name, int *header_printed)
 	return 0;
 }
 
-int list_attributes(const char *path, int *header_printed)
+static int list_attributes(const char *path, int *header_printed)
 {
 	static char *list;
 	static size_t list_size;
@@ -356,8 +358,8 @@ int list_attributes(const char *path, int *header_printed)
 	return 0;
 }
 
-int do_print(const char *path, const struct stat *stat, int walk_flags,
-	     void *unused)
+static int do_print(const char *path, const struct stat *stat, int walk_flags,
+		    void *unused)
 {
 	int header_printed = 0;
 	int err = 0;
@@ -378,7 +380,7 @@ int do_print(const char *path, const struct stat *stat, int walk_flags,
 	return err;
 }
 
-void help(void)
+static void help(void)
 {
 	printf(_("%s %s -- get extended attributes\n"),
 	       progname, VERSION);

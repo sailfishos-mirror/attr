@@ -50,24 +50,23 @@ static const struct option long_options[] = {
 	{ NULL,			0, 0, 0 }
 };
 
-char *opt_name;  /* attribute name to set */
-char *opt_value;  /* attribute value */
-int opt_set;  /* set an attribute */
-int opt_remove;  /* remove an attribute */
-int opt_restore;  /* restore has been run */
-int opt_deref = 1;  /* dereference symbolic links */
-int opt_raw;  /* attribute value is not encoded */
+static char *opt_name;  /* attribute name to set */
+static char *opt_value;  /* attribute value */
+static int opt_set;  /* set an attribute */
+static int opt_remove;  /* remove an attribute */
+static int opt_restore;  /* restore has been run */
+static int opt_deref = 1;  /* dereference symbolic links */
+static int opt_raw;  /* attribute value is not encoded */
 
-int had_errors;
-const char *progname;
+static int had_errors;
+static const char *progname;
 
-int do_set(const char *path, const char *name, const char *value);
-const char *decode(const char *value, size_t *size);
-int restore(const char *filename);
-int hex_digit(char c);
-int base64_digit(char c);
+static int do_set(const char *path, const char *name, const char *value);
+static const char *decode(const char *value, size_t *size);
+static int hex_digit(char c);
+static int base64_digit(char c);
 
-const char *strerror_ea(int err)
+static const char *strerror_ea(int err)
 {
 #ifdef __linux__
 	/* The Linux kernel does not define ENOATTR, but maps it to ENODATA. */
@@ -87,18 +86,18 @@ static const char *xquote(const char *str, const char *quote_chars)
 	return q;
 }
 
-int do_setxattr(const char *path, const char *name,
-		const void *value, size_t size)
+static int do_setxattr(const char *path, const char *name,
+		       const void *value, size_t size)
 {
 	return (opt_deref ? setxattr : lsetxattr)(path, name, value, size, 0);
 }
 
-int do_removexattr(const char *path, const char *name)
+static int do_removexattr(const char *path, const char *name)
 {
 	return (opt_deref ? removexattr : lremovexattr)(path, name);
 }
 
-int restore(const char *filename)
+static int restore(const char *filename)
 {
 	static char *path;
 	static size_t path_size;
@@ -175,7 +174,7 @@ cleanup:
 	return status;
 }
 
-void help(void)
+static void help(void)
 {
 	printf(_("%s %s -- set extended attributes\n"), progname, VERSION);
 	printf(_("Usage: %s %s\n"), progname, CMD_LINE_SPEC1);
@@ -268,7 +267,7 @@ synopsis:
 	return 2;
 }
 
-int do_set(const char *path, const char *name, const char *value)
+static int do_set(const char *path, const char *name, const char *value)
 {
 	size_t size = 0;
 	int error;
@@ -294,7 +293,7 @@ int do_set(const char *path, const char *name, const char *value)
 	return 0;
 }
 
-const char *decode(const char *value, size_t *size)
+static const char *decode(const char *value, size_t *size)
 {
 	static char *decoded;
 	static size_t decoded_size;
@@ -444,7 +443,7 @@ const char *decode(const char *value, size_t *size)
 	return decoded;
 }
 
-int hex_digit(char c)
+static int hex_digit(char c)
 {
 	if (c >= '0' && c <= '9')
 		return c - '0';
@@ -456,7 +455,7 @@ int hex_digit(char c)
 		return -1;
 }
 
-int base64_digit(char c)
+static int base64_digit(char c)
 {
 	if (c >= 'A' && c <= 'Z')
 		return c - 'A';
