@@ -57,6 +57,21 @@ AS_CASE([$host_os],
 	[linux*], [os_linux=yes])
 AM_CONDITIONAL([OS_LINUX], [test "x$os_linux" = "xyes"])
 
+AC_CACHE_CHECK(whether __attribute__((__symver__())) is supported,
+	gcc_cv_symver_attribute,
+	[cat > conftest.c <<EOF
+void foo (void) {}
+__typeof(foo) foo __attribute__ ((__symver__("foo@foo")));
+EOF
+	gcc_cv_symver_attribute=no
+	if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then \
+	    gcc_cv_symver_attribute=yes
+	fi
+	rm -f conftest.[cs]
+])
+AS_IF([test $gcc_cv_symver_attribute = yes],
+      [AC_DEFINE(HAVE_SYMVER_ATTRIBUTE, [], [GCC supports symver attribute])])
+
 AC_CONFIG_COMMANDS([include/attr],
 	[dnl
 	rm -rf include/attr

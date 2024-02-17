@@ -31,10 +31,10 @@
  * prefer symver attribute if available (since gcc 10),
  * fall back to traditional .symver asm directive otherwise.
  */
-#ifdef __has_attribute
-# if __has_attribute(__symver__)
-#  define SYMVER(cn, vn) __typeof(cn) cn __attribute__((__symver__(vn)))
-# elif __has_attribute(__no_reorder__)
+#if defined(HAVE_SYMVER_ATTRIBUTE)
+# define SYMVER(cn, vn) __typeof(cn) cn __attribute__((__symver__(vn)))
+#elif defined(__has_attribute)
+# if __has_attribute(__no_reorder__)
    /*
     * Avoid wrong partitioning with older gcc and LTO. May not work reliably
     * with all versions; use -flto-partition=none if you encounter problems.
