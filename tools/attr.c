@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <string.h>
 #include <locale.h>
+#include <libgen.h>
 
 #include <attr/attributes.h>
 
