@@ -6,5 +6,6 @@ includedir=@includedir@
 Name:		libattr
 Description:	A library for filesystem extended attribute support
 Version:	@PACKAGE_VERSION@
+License:	LGPL-2.1-or-later
 Cflags:		-I${includedir}
 Libs:		-L${libdir} -lattr
