@@ -27,10 +27,6 @@
 #include <string.h>
 #include <errno.h>
 
-#if defined(HAVE_ALLOCA_H)
-# include <alloca.h>
-#endif
-
 #if defined(HAVE_ATTR_LIBATTR_H)
 # include "attr/libattr.h"
 #endif
@@ -41,14 +37,6 @@
 
 #if !defined(ENOTSUP)
 # define ENOTSUP (-1)
-#endif
-
-#if defined(HAVE_ALLOCA)
-# define my_alloc(size) alloca (size)
-# define my_free(ptr) do { } while(0)
-#else
-# define my_alloc(size) malloc (size)
-# define my_free(ptr) free (ptr)
 #endif
 
 /* Copy extended attributes from src_path to dst_path. If the file
@@ -66,14 +54,37 @@ attr_copy_fd(const char *src_path, int src_fd,
     defined(HAVE_FSETXATTR)
 	int ret = 0;
 	ssize_t size;
-	char *names = NULL, *end_names, *name, *value = NULL;
+	char smallbuf[512];
+	char *names = smallbuf, *end_names, *name, *value = NULL;
+	size_t namesalloc = sizeof smallbuf;
 	unsigned int setxattr_ENOTSUP = 0;
 
 	/* ignore acls by default */
 	if (check == NULL)
 		check = attr_copy_check_permissions;
 
-	size = flistxattr (src_fd, NULL, 0);
+	for (;;) {
+		size_t morealloc = 2 * namesalloc;
+		size = flistxattr (src_fd, names, namesalloc - 1);
+		if (size >= 0 || errno != ERANGE)
+			break;
+		if (names == smallbuf) {
+			size = flistxattr (src_fd, NULL, 0);
+			if (size < 0)
+				break;
+			if (morealloc < size)
+				morealloc = size;
+		} else
+			free (names);
+		names = namesalloc < morealloc ? malloc (morealloc - 1) : NULL;
+		if (names == NULL) {
+			error (ctx, "");
+			ret = -1;
+			goto getout;
+		}
+		namesalloc = morealloc;
+	}
+
 	if (size < 0) {
 		if (errno != ENOSYS && errno != ENOTSUP) {
 			const char *qpath = quote (ctx, src_path);
@@ -81,20 +92,6 @@ attr_copy_fd(const char *src_path, int src_fd,
 			quote_free (ctx, qpath);
 			ret = -1;
 		}
-		goto getout;
-	}
-	names = (char *) my_alloc (size+1);
-	if (names == NULL) {
-		error (ctx, "");
-		ret = -1;
-		goto getout;
-	}
-	size = flistxattr (src_fd, names, size);
-	if (size < 0) {
-		const char *qpath = quote (ctx, src_path);
-		error (ctx, _("listing attributes of %s"), qpath);
-		quote_free (ctx, qpath);
-		ret = -1;
 		goto getout;
 	} else {
 		names[size] = '\0';
@@ -167,10 +164,10 @@ attr_copy_fd(const char *src_path, int src_fd,
 	}
 getout:
 	free (value);
-	my_free (names);
+	if (names != smallbuf)
+		free (names);
 	return ret;
 #else
 	return 0;
 #endif
 }
-
