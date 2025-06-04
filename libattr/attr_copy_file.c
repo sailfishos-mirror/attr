@@ -66,13 +66,7 @@ attr_copy_file(const char *src_path, const char *dst_path,
 		nsize = llistxattr (src_path, names, namesalloc - 1);
 		if (nsize >= 0 || errno != ERANGE)
 			break;
-		if (names == namesbuf) {
-			nsize = llistxattr (src_path, NULL, 0);
-			if (nsize < 0)
-				break;
-			if (more < nsize)
-				more = nsize;
-		} else
+		if (names != namesbuf)
 			free (names);
 		names = namesalloc < more ? malloc (more) : NULL;
 		if (names == NULL) {

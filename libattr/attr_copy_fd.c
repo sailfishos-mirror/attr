@@ -68,13 +68,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 		nsize = flistxattr (src_fd, names, namesalloc - 1);
 		if (nsize >= 0 || errno != ERANGE)
 			break;
-		if (names == namesbuf) {
-			nsize = flistxattr (src_fd, NULL, 0);
-			if (nsize < 0)
-				break;
-			if (more < nsize)
-				more = nsize;
-		} else
+		if (names != namesbuf)
 			free (names);
 		names = namesalloc < more ? malloc (more) : NULL;
 		if (names == NULL) {
