@@ -74,7 +74,7 @@ attr_copy_file(const char *src_path, const char *dst_path,
 				morealloc = size;
 		} else
 			free (names);
-		names = namesalloc < morealloc ? malloc (morealloc - 1) : NULL;
+		names = namesalloc < morealloc ? malloc (morealloc) : NULL;
 		if (names == NULL) {
 			error (ctx, "");
 			ret = -1;
