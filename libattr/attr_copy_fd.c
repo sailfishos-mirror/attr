@@ -99,7 +99,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 	   that yields a buffer ending in non-'\0'.  */
 	names[size++] = '\0';
 
-	for (name = names; name < names + size; name = strchr(name, '\0') + 1) {
+	for (name = names; name < names + size; name += strlen (name) + 1) {
 		void *old_value;
 
 		/* Defend against empty name from the above workaround, or from
