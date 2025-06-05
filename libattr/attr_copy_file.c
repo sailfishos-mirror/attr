@@ -53,8 +53,11 @@ attr_copy_file(const char *src_path, const char *dst_path,
 	int ret = 0;
 	ssize_t nsize;
 	char namesbuf[512];
-	char *names = namesbuf, *name, *value = NULL;
+	char valuebuf[512];
+	char *names = namesbuf, *name;
+	char *value = valuebuf;
 	size_t namesalloc = sizeof namesbuf;
+	size_t valuealloc = sizeof valuebuf;
 	int setxattr_ENOTSUP = 0;
 
 	/* ignore acls by default */
@@ -92,7 +95,7 @@ attr_copy_file(const char *src_path, const char *dst_path,
 	names[nsize++] = '\0';
 
 	for (name = names; name < names + nsize; name += strlen (name) + 1) {
-		void *old_value;
+		char *value;
 		ssize_t vsize;
 
 		/* Defend against empty name from the above workaround, or from
@@ -104,24 +107,22 @@ attr_copy_file(const char *src_path, const char *dst_path,
 		if (!check (name, ctx))
 			continue;
 
-		vsize = lgetxattr (src_path, name, NULL, 0);
-		if (vsize < 0) {
-			const char *qpath = quote (ctx, src_path);
-			const char *qname = quote (ctx, name);
-			error (ctx, _("getting attribute %s of %s"),
-			       qname, qpath);
-			quote_free (ctx, qname);
-			quote_free (ctx, qpath);
-			ret = -1;
-			continue;
+		for (;;) {
+			size_t more = 2 * valuealloc;
+
+			vsize = lgetxattr (src_path, name, value, valuealloc);
+			if (vsize >= 0 || errno != ERANGE)
+				break;
+			if (value != valuebuf)
+				free (value);
+			value = valuealloc < more ? malloc (more) : NULL;
+			if (value == NULL) {
+				error (ctx, "");
+				ret = -1;
+				goto getout;
+			}
+			valuealloc = more;
 		}
-		value = (char *) realloc (old_value = value, vsize);
-		if (vsize != 0 && value == NULL) {
-			free(old_value);
-			error (ctx, "");
-			ret = -1;
-		}
-		vsize = lgetxattr (src_path, name, value, vsize);
 		if (vsize < 0) {
 			const char *qpath = quote (ctx, src_path);
 			const char *qname = quote (ctx, name);
@@ -161,8 +162,9 @@ attr_copy_file(const char *src_path, const char *dst_path,
 		ret = -1;
 		quote_free (ctx, qpath);
 	}
+	if (value != valuebuf)
+		free (value);
 getout:
-	free (value);
 	if (names != namesbuf)
 		free (names);
 	return ret;
