@@ -55,7 +55,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 	int ret = 0;
 	ssize_t size;
 	char smallbuf[512];
-	char *names = smallbuf, *end_names, *name, *value = NULL;
+	char *names = smallbuf, *name, *value = NULL;
 	size_t namesalloc = sizeof smallbuf;
 	int setxattr_ENOTSUP = 0;
 
@@ -93,16 +93,22 @@ attr_copy_fd(const char *src_path, int src_fd,
 			ret = -1;
 		}
 		goto getout;
-	} else {
-		names[size] = '\0';
-		end_names = names + size;
 	}
 
-	for (name = names; name != end_names; name = strchr(name, '\0') + 1) {
+	/* Append an empty name to defend against a hypothetical syscall bug
+	   that yields a buffer ending in non-'\0'.  */
+	names[size++] = '\0';
+
+	for (name = names; name < names + size; name = strchr(name, '\0') + 1) {
 		void *old_value;
 
+		/* Defend against empty name from the above workaround, or from
+		   a hypothetical syscall bug that yields an empty name.  */
+		if (!*name)
+			continue;
+
 		/* check if this attribute shall be preserved */
-		if (!*name || !check(name, ctx))
+		if (!check (name, ctx))
 			continue;
 
 		size = fgetxattr (src_fd, name, NULL, 0);
