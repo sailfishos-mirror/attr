@@ -57,7 +57,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 	char smallbuf[512];
 	char *names = smallbuf, *end_names, *name, *value = NULL;
 	size_t namesalloc = sizeof smallbuf;
-	unsigned int setxattr_ENOTSUP = 0;
+	int setxattr_ENOTSUP = 0;
 
 	/* ignore acls by default */
 	if (check == NULL)
@@ -135,7 +135,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 		}
 		if (fsetxattr (dst_fd, name, value, size, 0) != 0) {
 			if (errno == ENOTSUP)
-				setxattr_ENOTSUP++;
+				setxattr_ENOTSUP = 1;
 			else {
 				const char *qpath = quote (ctx, dst_path);
 				if (errno == ENOSYS) {
