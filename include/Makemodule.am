@@ -4,8 +4,8 @@ noinst_HEADERS += \
 	include/libattr.h \
 	include/misc.h \
 	include/nls.h \
+	include/old_walk_tree.h \
 	include/visibility-hidden.h \
-	include/walk_tree.h \
 	include/xattrat.h \
 	include/xattrat_compat.h
 

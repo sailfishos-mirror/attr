@@ -32,7 +32,7 @@
 #include <libgen.h>
 #include <sys/xattr.h>
 
-#include "walk_tree.h"
+#include "old_walk_tree.h"
 #include "misc.h"
 
 #define CMD_LINE_OPTIONS "n:de:m:hRLP"
@@ -494,8 +494,8 @@ int main(int argc, char *argv[])
 	}
 
 	while (optind < argc) {
-		had_errors += walk_tree(argv[optind], walk_flags, 0,
-					do_print, NULL);
+		had_errors += old_walk_tree(argv[optind], walk_flags, 0,
+					    do_print, NULL);
 		optind++;
 	}
 
