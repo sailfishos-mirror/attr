@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
 #include <getopt.h>
@@ -32,7 +33,8 @@
 #include <libgen.h>
 #include <sys/xattr.h>
 
-#include "old_walk_tree.h"
+#include "xattrat_compat.h"
+#include "walk_tree.h"
 #include "misc.h"
 
 #define CMD_LINE_OPTIONS "n:de:m:hRLP"
@@ -55,7 +57,8 @@ static const struct option long_options[] = {
 	{ NULL,			0, 0, 0 }
 };
 
-static int walk_flags = WALK_TREE_DEREFERENCE;
+static enum walk_flags walk_flags = 0;
+static int at_flags = 0;
 static int opt_dump;  /* dump attribute values (or only list the names) */
 static char *opt_name;  /* dump named attributes */
 static char *opt_name_pattern = "^user\\.";  /* include only matching names */
@@ -78,19 +81,6 @@ static const char *xquote(const char *str, const char *quote_chars)
 		exit(1);
 	}
 	return q;
-}
-
-static int do_getxattr(const char *path, const char *name, void *value,
-		       size_t size)
-{
-	return ((walk_flags & WALK_TREE_DEREFERENCE) ?
-		getxattr : lgetxattr)(path, name, value, size);
-}
-
-static int do_listxattr(const char *path, char *list, size_t size)
-{
-	return ((walk_flags & WALK_TREE_DEREFERENCE) ?
-		listxattr : llistxattr)(path, list, size);
 }
 
 static const char *strerror_ea(int err)
@@ -230,7 +220,8 @@ static const char *encode(const char *value, size_t *size)
 	return encoded;
 }
 
-static int print_attribute(const char *path, const char *name,
+static int print_attribute(int dirfd, const char *dirname, const char *pathname,
+			   const char *fullname, const char *name,
 			   int *header_printed)
 {
 	static char *value;
@@ -239,9 +230,9 @@ static int print_attribute(const char *path, const char *name,
 	size_t length = 0;
 
 	if (opt_dump || opt_value_only) {
-		rval = do_getxattr(path, name, NULL, 0);
+		rval = getxattrat(dirfd, pathname, at_flags, name, NULL, 0);
 		if (rval < 0) {
-			fprintf(stderr, "%s: ", xquote(path, "\n\r"));
+			fprintf(stderr, "%s: ", xquote(fullname, "\n\r"));
 			fprintf(stderr, "%s: %s\n", xquote(name, "\n\r"),
 				strerror_ea(errno));
 			return 1;
@@ -251,9 +242,10 @@ static int print_attribute(const char *path, const char *name,
 			had_errors++;
 			return 1;
 		}
-		rval = do_getxattr(path, name, value, value_size);
+		rval = getxattrat(dirfd, pathname, at_flags, name, value,
+				   value_size);
 		if (rval < 0) {
-			fprintf(stderr, "%s: ", xquote(path, "\n\r"));
+			fprintf(stderr, "%s: ", xquote(fullname, "\n\r"));
 			fprintf(stderr, "%s: %s\n", xquote(name, "\n\r"),
 				strerror_ea(errno));
 			return 1;
@@ -262,24 +254,20 @@ static int print_attribute(const char *path, const char *name,
 	}
 
 	if (opt_strip_leading_slash) {
-		if (*path == '/') {
+		if (*fullname == '/') {
 			if (!absolute_warning) {
-				fprintf(stderr, _("%s: Removing leading '/' "
-					"from absolute path names\n"),
+				fprintf(stderr, _("%s: Removing leading "
+					"'/' from absolute path names\n"),
 					progname);
 				absolute_warning = 1;
 			}
-			while (*path == '/')
-				path++;
-		} else if (*path == '.' && *(path+1) == '/')
-			while (*++path == '/')
-				/* nothing */ ;
-		if (*path == '\0')
-			path = ".";
+			while (*fullname == '/')
+				fullname++;
+		}
 	}
 
 	if (!*header_printed && !opt_value_only) {
-		printf("# file: %s\n", xquote(path, "\n\r"));
+		printf("# file: %s\n", xquote(fullname, "\n\r"));
 		*header_printed = 1;
 	}
 
@@ -296,7 +284,8 @@ static int print_attribute(const char *path, const char *name,
 	return 0;
 }
 
-static int list_attributes(const char *path, int *header_printed)
+static int list_attributes(int dirfd, const char *dirname, const char *pathname,
+			   const char *fullname, int *header_printed)
 {
 	static char *list;
 	static size_t list_size;
@@ -306,10 +295,10 @@ static int list_attributes(const char *path, int *header_printed)
 	ssize_t length;
 	char *l;
 
-	length = do_listxattr(path, NULL, 0);
+	length = listxattrat(dirfd, pathname, at_flags, NULL, 0);
 	if (length < 0) {
-		fprintf(stderr, "%s: %s: %s\n", progname, xquote(path, "\n\r"),
-			strerror_ea(errno));
+		fprintf(stderr, "%s: %s: %s\n", progname,
+			xquote(fullname, "\n\r"), strerror_ea(errno));
 		had_errors++;
 		return 1;
 	} else if (length == 0)
@@ -321,9 +310,10 @@ static int list_attributes(const char *path, int *header_printed)
 		return 1;
 	}
 
-	length = do_listxattr(path, list, list_size);
+	length = listxattrat(dirfd, pathname, at_flags, list, list_size);
 	if (length < 0) {
-		perror(xquote(path, "\n\r"));
+		fprintf(stderr, "%s: %s: %s\n", progname,
+			xquote(fullname, "\n\r"), strerror_ea(errno));
 		had_errors++;
 		return 1;
 	}
@@ -353,27 +343,44 @@ static int list_attributes(const char *path, int *header_printed)
 		int n;
 
 		for (n = 0; n < num_names; n++)
-			print_attribute(path, names[n], header_printed);
+			print_attribute(dirfd, dirname, pathname, fullname,
+					names[n], header_printed);
 	}
 	return 0;
 }
 
-static int do_print(const char *path, const struct stat *stat, int walk_flags,
+static int do_print(int dirfd, const char *dirname, const char *pathname,
+		    unsigned char dirtype, enum walk_flags walk_flags,
 		    void *unused)
 {
+	static char *__fullname;
+	const char *fullname;
 	int header_printed = 0;
 	int err = 0;
 
+	if (*dirname) {
+		free(__fullname);
+		__fullname = NULL;
+		if (asprintf(&__fullname, "%s%s", dirname, pathname) == -1) {
+			fprintf(stderr, "%s: %s", progname, strerror(errno));
+			return 1;
+		}
+		fullname = __fullname;
+	} else
+		fullname = pathname;
+
 	if (walk_flags & WALK_TREE_FAILED) {
-		fprintf(stderr, "%s: %s: %s\n", progname, xquote(path, "\n\r"),
-			strerror(errno));
+		fprintf(stderr, "%s: %s: %s\n", progname,
+			xquote(fullname, "\n\r"), strerror(errno));
 		return 1;
 	}
 
 	if (opt_name)
-		err = print_attribute(path, opt_name, &header_printed);
+		err = print_attribute(dirfd, dirname, pathname, fullname,
+				      opt_name, &header_printed);
 	else
-		err = list_attributes(path, &header_printed);
+		err = list_attributes(dirfd, dirname, pathname, fullname,
+				      &header_printed);
 
 	if (header_printed)
 		puts("");
@@ -437,7 +444,7 @@ int main(int argc, char *argv[])
 				return 0;
 
 			case 'h': /* do not dereference symlinks */
-				walk_flags &= ~WALK_TREE_DEREFERENCE;
+				at_flags |= AT_SYMLINK_NOFOLLOW;
 				break;
 
 			case 'n':  /* get named attribute */
@@ -494,8 +501,8 @@ int main(int argc, char *argv[])
 	}
 
 	while (optind < argc) {
-		had_errors += old_walk_tree(argv[optind], walk_flags, 0,
-					    do_print, NULL);
+		had_errors += walk_tree(argv[optind], walk_flags, do_print,
+					NULL);
 		optind++;
 	}
 
