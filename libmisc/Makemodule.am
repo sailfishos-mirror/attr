@@ -6,3 +6,8 @@ libmisc_la_SOURCES = \
 	libmisc/quote.c \
 	libmisc/unquote.c \
 	libmisc/walk_tree.c
+
+if NEED_XATTRAT
+libmisc_la_SOURCES += \
+	libmisc/xattrat.c
+endif

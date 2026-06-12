@@ -36,6 +36,13 @@ AC_SYS_LARGEFILE
 AM_PROG_AR
 LT_INIT
 
+AC_CHECK_FUNCS(getxattrat setxattrat listxattrat removexattrat)
+AM_CONDITIONAL([NEED_XATTRAT],
+	       [test "x$ac_cv_func_getxattrat" = xno -o \
+		     "x$ac_cv_func_setxattrat" = xno -o \
+		     "x$ac_cv_func_listxattrat" = xno -o \
+		     "x$ac_cv_func_removexattrat" = xno])
+
 AM_GNU_GETTEXT_VERSION([0.18.2])
 AM_GNU_GETTEXT([external])
 
