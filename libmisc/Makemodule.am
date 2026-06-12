@@ -13,7 +13,8 @@ libmisc_la_SOURCES = \
 	libmisc/quote.c \
 	libmisc/removexattrat_compat.c \
 	libmisc/setxattrat_compat.c \
-	libmisc/unquote.c
+	libmisc/unquote.c \
+	libmisc/walk_tree.c
 
 if NEED_XATTRAT
 libmisc_la_SOURCES += \
