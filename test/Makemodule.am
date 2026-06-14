@@ -1,6 +1,8 @@
+TEST_EXTENSIONS = .run
+
 TESTS = \
-	test/attr.test \
-	test/root/getfattr.test
+	test/attr.run \
+	test/root/getfattr.run
 
 EXTRA_DIST += \
 	test/README \
@@ -9,5 +11,7 @@ EXTRA_DIST += \
 	$(TESTS)
 
 # Make sure translations don't break tests when matching output.
-AM_TESTS_ENVIRONMENT = PATH="$(abs_top_builddir):$$PATH"; export LC_MESSAGES=C;
-TEST_LOG_COMPILER = $(srcdir)/test/run
+AM_TESTS_ENVIRONMENT = \
+	export LC_MESSAGES=C; \
+	PATH="$(abs_top_builddir):$$PATH";
+RUN_LOG_COMPILER = $(srcdir)/test/run
