@@ -18,13 +18,11 @@ libattr_la_SOURCES = \
 	libattr/attr_copy_check.c \
 	libattr/attr_copy_fd.c \
 	libattr/attr_copy_file.c \
-	libattr/libattr.c \
-	libattr/libattr.h
+	libattr/libattr.c
 if OS_LINUX
 libattr_la_SOURCES += \
 	libattr/syscalls.c
 endif
-libattr_la_CFLAGS = -include libattr/libattr.h
 libattr_la_LDFLAGS = \
 	-Wl,--version-script,$(top_srcdir)/exports \
 	-version-info $(LTVERSION)

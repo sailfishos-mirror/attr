@@ -17,27 +17,17 @@
 
 /* Copy extended attributes between files. */
 
-#if defined (HAVE_CONFIG_H)
 #include "config.h"
-#endif
-
 #include <sys/types.h>
 # include <sys/xattr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
-#if defined(HAVE_ATTR_LIBATTR_H)
-# include "attr/libattr.h"
-#endif
+#include "attr/libattr.h"
 
 #define ERROR_CONTEXT_MACROS
 #include "error_context.h"
 #include "nls.h"
-
-#if !defined(ENOTSUP)
-# define ENOTSUP (-1)
-#endif
 
 /* Copy extended attributes from src_path to dst_path. If the file
    has an extended Access ACL (system.posix_acl_access) and that is
@@ -50,8 +40,6 @@ attr_copy_fd(const char *src_path, int src_fd,
 	     int (*check) (const char *, struct error_context *),
 	     struct error_context *ctx)
 {
-#if defined(HAVE_FLISTXATTR) && defined(HAVE_FGETXATTR) && \
-    defined(HAVE_FSETXATTR)
 	int ret = 0;
 	ssize_t nsize;
 	char namesbuf[512];
@@ -169,7 +157,4 @@ getout:
 	if (names != namesbuf)
 		free (names);
 	return ret;
-#else
-	return 0;
-#endif
 }
