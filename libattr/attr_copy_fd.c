@@ -97,7 +97,6 @@ attr_copy_fd(const char *src_path, int src_fd,
 	names[nsize++] = '\0';
 
 	for (name = names; name < names + nsize; name += strlen (name) + 1) {
-		char *value;
 		ssize_t vsize;
 
 		/* Defend against empty name from the above workaround, or from
