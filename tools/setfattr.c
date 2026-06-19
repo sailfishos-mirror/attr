@@ -192,6 +192,7 @@ static void help(void)
 
 int main(int argc, char *argv[])
 {
+	char **restore_args = NULL;
 	int opt;
 
 	progname = basename(argv[0]);
@@ -233,8 +234,14 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'B':  /* restore */
-				opt_restore = 1;
-				restore(optarg);
+				opt_restore++;
+				restore_args = realloc(restore_args,
+					opt_restore * sizeof(*restore_args));
+				if (!restore_args) {
+					perror(progname);
+					exit(1);
+				}
+				restore_args[opt_restore - 1] = optarg;
 				break;
 
 			case 'V':
@@ -251,6 +258,12 @@ int main(int argc, char *argv[])
 	}
 	if (!(((opt_remove || opt_set) && optind < argc) || opt_restore))
 		goto synopsis;
+
+	if (opt_restore) {
+		for (opt = 0; opt < opt_restore; opt++)
+			restore(restore_args[opt]);
+		free(restore_args);
+	}
 
 	while (optind < argc) {
 		do_set(argv[optind], unquote(opt_name), opt_value);
