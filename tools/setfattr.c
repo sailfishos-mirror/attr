@@ -99,8 +99,8 @@ static int do_removexattr(const char *path, const char *name)
 
 static int restore(const char *filename)
 {
-	static char *path;
-	static size_t path_size;
+	char *path = NULL;
+	size_t path_size = 0;
 	FILE *file;
 	char *l;
 	int line = 0, backup_line, status = 0;
