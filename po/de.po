@@ -148,7 +148,7 @@ msgid "Usage: %s %s\n"
 msgstr "Verwendung: %s %s\n"
 
 #: tools/getfattr.c:397
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "  -n, --name=name         get the named extended attribute value\n"
 "  -d, --dump              get all extended attribute values\n"
@@ -167,7 +167,7 @@ msgstr ""
 "  -n, --name=name         Das angegebene erweiterte Attribut lesen\n"
 "  -d, --dump              Alle erweiterten Attribute lesen\n"
 "  -e, --encoding=...      Wert codieren (als 'text', 'hex' oder 'base64')\n"
-"      --match=muster      Nur Attribute, die mit muster übereinstimmen\n"
+"  -m, --match=muster      Nur Attribute, die mit muster übereinstimmen\n"
 "      --only-values       Die Attributwerte ohne Codierung ausgeben\n"
 "  -h, --no-dereference    Symbolische Links nicht dereferenzieren\n"
 "      --one-file-system   Dateien auf anderen Dateisystemen überspringen\n"
@@ -208,6 +208,8 @@ msgid ""
 "Warning: option --restore=file is unsafe without option -P (--physical) as "
 "it traverses symbolic links in pathnames\n"
 msgstr ""
+"Warnung: Option --restore=file ist ohne der Option -P (--physical) unsicher, "
+"weil sie symbolische Verknüpfungen in Pfadnamen verfolgt\n"
 
 #: tools/setfattr.c:162
 #, c-format
@@ -215,11 +217,14 @@ msgid ""
 "Warning: option --restore=file is unsafe without option -h (--no-"
 "dereference) as it dereferences symbolic link pathnames\n"
 msgstr ""
+"Warnung: Option --restore=file ist ohne der Option -h (--no-dereference) "
+"unsicher, weil sie symbolische Links dereferenziert\n"
 
 #: tools/setfattr.c:199
 #, c-format
 msgid "%s: lookup of directory %s without following symlinks: %s\n"
 msgstr ""
+"%s: Suche nach Verzeichnis %s ohne Verfolgung von symbolischen Links: %s\n"
 
 #: tools/setfattr.c:251
 #, c-format
@@ -230,10 +235,10 @@ msgstr "%s %s -- Erweiterte Attribute setzen\n"
 #: tools/setfattr.c:379
 #, c-format
 msgid "       %s %s\n"
-msgstr ""
+msgstr "            %s %s\n"
 
 #: tools/setfattr.c:256
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "  -n, --name=name         set the value of the named extended attribute\n"
 "  -x, --remove=name       remove the named extended attribute\n"
@@ -249,24 +254,13 @@ msgstr ""
 "  -x, --remove=name       Entfernt das angegebene erweiterte Attribut\n"
 "  -v, --value=wert        Wert für das erweiterte Attribut\n"
 "  -h, --no-dereference    Symbolische Links nicht dereferenzieren\n"
+"  -P, --physical          Symbolische Links während Restore nicht verfolgen\n"
 "      --restore=datei     Erweiterte Attribute wiederhestellen\n"
 "      --raw               Wert des Attributs ist nicht codiert\n"
 "      --version           Die Version ausgeben\n"
 "      --help              Diese Hilfe\n"
 
 #: tools/setfattr.c:380
-#, fuzzy, c-format
-msgid "Try `%s --help' for more information.\n"
-msgstr ""
-"Verwendung: %s %s\n"
-"Weiterführende Informationen mit `%s --help'.\n"
-
 #, c-format
-#~ msgid ""
-#~ "Usage: %s %s\n"
-#~ "       %s %s\n"
-#~ "Try `%s --help' for more information.\n"
-#~ msgstr ""
-#~ "Verwendung: %s %s\n"
-#~ "       %s %s\n"
-#~ "Weiterführende Informationen mit `%s --help'.\n"
+msgid "Try `%s --help' for more information.\n"
+msgstr "Weiterführende Informationen mit `%s --help'.\n"
