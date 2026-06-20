@@ -30,7 +30,7 @@ setfattr \- set extended attributes of filesystem objects
 .nf
 \f3setfattr\f1 [\f3\-h\f1] \f3\-n name\f1 [\f3\-v value\f1] \f3pathname\f1...
 \f3setfattr\f1 [\f3\-h\f1] \f3\-x name\f1 \f3pathname\f1...
-\f3setfattr\f1 [\f3\-h\f1] \f3\-\-restore=file\f1
+\f3setfattr\f1 [\f3\-hP\f1] \f3\-\-restore=file\f1
 .fi
 .SH DESCRIPTION
 The 
@@ -62,8 +62,11 @@ Remove the named extended attribute entirely.
 .BR \-h ", " \-\-no-dereference
 Do not follow symlinks.  If
 .I pathname
-is a symbolic link, it is not followed, but is instead itself the
-inode being modified.
+is a symbolic link, it is not followed, but is instead modified itself.
+.TP
+.BR \-P ", " \-\-physical
+Do not traverse symbolic links in pathnames during a restore.  Can be combined
+with option \-h.
 .TP
 .BR \-\-restore =\f2file\f1
 Restores extended attributes from file.

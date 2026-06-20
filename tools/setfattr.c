@@ -30,19 +30,25 @@
 #include <ctype.h>
 #include <libgen.h>
 #include <sys/xattr.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
+#include "openat2.h"
 
+#include "xattrat_compat.h"
 #include "misc.h"
 
-#define CMD_LINE_OPTIONS "n:x:v:h"
+#define CMD_LINE_OPTIONS "n:x:v:hP"
 #define CMD_LINE_SPEC1 "{-n name} [-v value] [-h] file..."
 #define CMD_LINE_SPEC2 "{-x name} [-h] file..."
+#define CMD_LINE_SPEC3 "[-hP] --restore=file"
 
 static const struct option long_options[] = {
 	{ "name",		1, 0, 'n' }, 
 	{ "remove",		1, 0, 'x' },
 	{ "value",		1, 0, 'v' },
 	{ "no-dereference",	0, 0, 'h' },
+	{ "physical",		0, 0, 'P' },
 	{ "restore",		1, 0, 'B' },
 	{ "raw",		0, 0, CHAR_MAX + 1 },
 	{ "version",		0, 0, 'V' },
@@ -57,11 +63,13 @@ static int opt_remove;  /* remove an attribute */
 static int opt_restore;  /* restore has been run */
 static int opt_deref = 1;  /* dereference symbolic links */
 static int opt_raw;  /* attribute value is not encoded */
+static int opt_physical;
 
 static int had_errors;
 static const char *progname;
 
-static int do_set(const char *path, const char *name, const char *value);
+static int do_set(int dirfd, const char *pathname, const char *fullpath,
+		  const char *name, const char *value);
 static const char *decode(const char *value, size_t *size);
 static int hex_digit(char c);
 static int base64_digit(char c);
@@ -86,25 +94,20 @@ static const char *xquote(const char *str, const char *quote_chars)
 	return q;
 }
 
-static int do_setxattr(const char *path, const char *name,
-		       const void *value, size_t size)
-{
-	return (opt_deref ? setxattr : lsetxattr)(path, name, value, size, 0);
-}
-
-static int do_removexattr(const char *path, const char *name)
-{
-	return (opt_deref ? removexattr : lremovexattr)(path, name);
-}
-
 static int restore(const char *filename)
 {
-	char *path = NULL;
-	size_t path_size = 0;
+	char *fullpath = NULL;
+	size_t fullpath_size = 0;
 	FILE *file;
 	char *l;
 	int line = 0, backup_line, status = 0;
-	
+	int dirfd = -1;
+	char *pathname, *dirname = NULL;
+#ifdef UNSAFE_RESTORE_WARNINGS
+	static int non_physical_restore_warning;
+	static int deref_restore_warning;
+#endif
+
 	if (strcmp(filename, "-") == 0)
 		file = stdin;
 	else {
@@ -139,20 +142,85 @@ static int restore(const char *filename)
 		} else
 			l += 8;
 		l = unquote(l);
-		if (high_water_alloc((void **)&path, &path_size, strlen(l)+1)) {
+		if (high_water_alloc((void **)&fullpath, &fullpath_size, strlen(l)+1)) {
 			perror(progname);
 			status = 1;
 			goto cleanup;
 		}
-		strcpy(path, l);
+		strcpy(fullpath, l);
+
+#ifdef UNSAFE_RESTORE_WARNINGS
+		if (!opt_physical && !non_physical_restore_warning) {
+			fprintf(stderr,
+				_("Warning: option --restore=file is unsafe "
+				  "without option -P (--physical) as it "
+				  "traverses symbolic links in pathnames\n"));
+			non_physical_restore_warning = 1;
+		}
+		if (opt_deref && !deref_restore_warning) {
+			fprintf(stderr,
+				_("Warning: option --restore=file is unsafe "
+				  "without option -h (--no-dereference) as it "
+				  "dereferences symbolic link pathnames\n"));
+			deref_restore_warning = 1;
+		}
+#endif
+
+		/* find the last pathname component */
+		pathname = fullpath + strlen(fullpath);
+		while (pathname > fullpath && pathname[-1] == '/')
+			pathname--;
+		while (pathname > fullpath && pathname[-1] != '/')
+			pathname--;
+
+		if (opt_physical && pathname != fullpath) {
+			dirname = malloc(pathname - fullpath + 1);
+			if (dirname == NULL) {
+				fprintf(stderr, "%s: %s\n", progname,
+					strerror(errno));
+				status = 1;
+				goto cleanup;
+			}
+			memcpy(dirname, fullpath, pathname - fullpath);
+			dirname[pathname - fullpath] = '\0';
+#ifdef USE_OPENAT2
+			struct open_how how = {
+				.flags = O_PATH | O_DIRECTORY,
+				.resolve = RESOLVE_NO_SYMLINKS,
+			};
+
+			dirfd = openat2(AT_FDCWD, dirname, &how, sizeof(how));
+#else
+			errno = ENOSYS;
+			dirfd = -1;
+#endif
+			if (dirfd == -1) {
+				fprintf(stderr,
+					_("%s: lookup of directory %s without "
+					  "following symlinks: %s\n"),
+					progname, dirname, strerror(errno));
+				status = 1;
+				goto cleanup;
+			}
+		} else {
+			pathname = fullpath;
+			dirfd = AT_FDCWD;
+		}
 
 		while ((l = next_line(file)) != NULL && *l != '\0') {
 			char *name = l, *value = strchr(l, '=');
 			line++;
 			if (value)
 				*value++ = '\0';
-			status = do_set(path, unquote(name), value);
+			status = do_set(dirfd, pathname, fullpath,
+					unquote(name), value);
 		}
+		if (dirfd != -1 && dirfd != AT_FDCWD) {
+			close(dirfd);
+			dirfd = -1;
+		}
+		free(dirname);
+		dirname = NULL;
 		if (l == NULL)
 			break;
 		line++;
@@ -165,8 +233,12 @@ static int restore(const char *filename)
 	}
 
 cleanup:
-	if (path)
-		free(path);
+	if (dirfd != -1 && dirfd != AT_FDCWD) {
+		close(dirfd);
+		dirfd = -1;
+	}
+	free(dirname);
+	free(fullpath);
 	if (file != stdin)
 		fclose(file);
 	if (status)
@@ -179,11 +251,13 @@ static void help(void)
 	printf(_("%s %s -- set extended attributes\n"), progname, VERSION);
 	printf(_("Usage: %s %s\n"), progname, CMD_LINE_SPEC1);
 	printf(_("       %s %s\n"), progname, CMD_LINE_SPEC2);
+	printf(_("       %s %s\n"), progname, CMD_LINE_SPEC3);
 	printf(_(
 "  -n, --name=name         set the value of the named extended attribute\n"
 "  -x, --remove=name       remove the named extended attribute\n"
 "  -v, --value=value       use value as the attribute value\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
+"  -P, --physical          do not traverse symbolic links during a restore\n"
 "      --restore=file      restore extended attributes\n"
 "      --raw               attribute value is not encoded\n"
 "      --version           print version and exit\n"
@@ -192,6 +266,7 @@ static void help(void)
 
 int main(int argc, char *argv[])
 {
+	enum { UNDEFINED_MODE, SET_MODE, RESTORE_MODE } mode = UNDEFINED_MODE;
 	char **restore_args = NULL;
 	int opt;
 
@@ -206,6 +281,9 @@ int main(int argc, char *argv[])
 		                  long_options, NULL)) != -1) {
 		switch(opt) {
 			case 'n':  /* attribute name */
+				if (mode == RESTORE_MODE)
+					goto synopsis;
+				mode = SET_MODE;
 				if (opt_name || opt_remove)
 					goto synopsis;
 				opt_name = optarg;
@@ -217,16 +295,25 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'v':  /* attribute value */
+				if (mode == RESTORE_MODE)
+					goto synopsis;
+				mode = SET_MODE;
 				if (opt_value || opt_remove)
 					goto synopsis;
 				opt_value = optarg;
 				break;
 
 			case CHAR_MAX + 1:
+				if (mode == RESTORE_MODE)
+					goto synopsis;
+				mode = SET_MODE;
 				opt_raw = 1;
 				break;
 
 			case 'x':  /* remove attribute */
+				if (mode == RESTORE_MODE)
+					goto synopsis;
+				mode = SET_MODE;
 				if (opt_name || opt_set)
 					goto synopsis;
 				opt_name = optarg;
@@ -234,6 +321,9 @@ int main(int argc, char *argv[])
 				break;
 
 			case 'B':  /* restore */
+				if (mode == SET_MODE)
+					goto synopsis;
+				mode = RESTORE_MODE;
 				opt_restore++;
 				restore_args = realloc(restore_args,
 					opt_restore * sizeof(*restore_args));
@@ -242,6 +332,13 @@ int main(int argc, char *argv[])
 					exit(1);
 				}
 				restore_args[opt_restore - 1] = optarg;
+				break;
+
+			case 'P': /* --physical */
+				if (mode == SET_MODE)
+					goto synopsis;
+				mode = RESTORE_MODE;
+				opt_physical = 1;
 				break;
 
 			case 'V':
@@ -259,29 +356,35 @@ int main(int argc, char *argv[])
 	if (!(((opt_remove || opt_set) && optind < argc) || opt_restore))
 		goto synopsis;
 
-	if (opt_restore) {
+	if (mode == RESTORE_MODE) {
 		for (opt = 0; opt < opt_restore; opt++)
 			restore(restore_args[opt]);
 		free(restore_args);
 	}
 
 	while (optind < argc) {
-		do_set(argv[optind], unquote(opt_name), opt_value);
+		if (mode == RESTORE_MODE)
+			goto synopsis;
+		mode = SET_MODE;
+		do_set(AT_FDCWD, argv[optind], argv[optind], unquote(opt_name),
+		       opt_value);
 		optind++;
 	}
 
 	return (had_errors ? 1 : 0);
 
 synopsis:
-	fprintf(stderr, _("Usage: %s %s\n"
-			  "       %s %s\n"
-	                  "Try `%s --help' for more information.\n"),
-		progname, CMD_LINE_SPEC1, progname, CMD_LINE_SPEC2, progname);
+	fprintf(stderr, _("Usage: %s %s\n"), progname, CMD_LINE_SPEC1);
+	fprintf(stderr, _("       %s %s\n"), progname, CMD_LINE_SPEC2);
+	fprintf(stderr, _("       %s %s\n"), progname, CMD_LINE_SPEC3);
+	fprintf(stderr, _("Try `%s --help' for more information.\n"), progname);
 	return 2;
 }
 
-static int do_set(const char *path, const char *name, const char *value)
+static int do_set(int dirfd, const char *pathname, const char *fullpath,
+		  const char *name, const char *value)
 {
+	int at_flags = opt_deref ? 0 : AT_SYMLINK_NOFOLLOW;
 	size_t size = 0;
 	int error;
 
@@ -293,13 +396,14 @@ static int do_set(const char *path, const char *name, const char *value)
 			return 1;
 	}
 	if (opt_set || opt_restore)
-		error = do_setxattr(path, name, value, size);
+		error = setxattrat(dirfd, pathname, at_flags,
+				   name, value, size, 0);
 	else
-		error = do_removexattr(path, name);
+		error = removexattrat(dirfd, pathname, at_flags, name);
 
 	if (error < 0) {
 		fprintf(stderr, "%s: %s: %s\n",
-			progname, xquote(path, "\n\r"), strerror_ea(errno));
+			progname, xquote(fullpath, "\n\r"), strerror_ea(errno));
 		had_errors++;
 		return 1;
 	}
