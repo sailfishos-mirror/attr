@@ -5,6 +5,7 @@ noinst_HEADERS += \
 	include/misc.h \
 	include/nls.h \
 	include/old_walk_tree.h \
+	include/openat2.h \
 	include/visibility-hidden.h \
 	include/walk_tree.h \
 	include/xattrat.h \
