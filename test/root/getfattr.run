@@ -11,19 +11,19 @@ Cry immediately if we are not running as root.
 	$ setfattr -h -n trusted.test -v test l
 
 This case should be obvious:
-	$ getfattr -m- -d f
+	$ getfattr -m- -d f | sort-getfattr-output
 	> # file: f
 	> user.test="test"
 	>
 
 Without -h, we dereference symlinks:
-	$ getfattr -m- -d l
+	$ getfattr -m- -d l | sort-getfattr-output
 	> # file: l
 	> user.test="test"
 	>
 
 With -h, we do not dereference symlinks:
-	$ getfattr -m- -hd l
+	$ getfattr -m- -hd l | sort-getfattr-output
 	> # file: l
 	> trusted.test="test"
 	>
@@ -55,7 +55,7 @@ Make sure we follow symlinks on the command line only when we should:
 	> user.test="test"
 	>
 
-	$ getfattr -m- -Rhd here
+	$ getfattr -m- -Rhd here | sort-getfattr-output
 
 	$ getfattr -m- -RLhd here | sort-getfattr-output
 	> # file: here/f
@@ -65,7 +65,7 @@ Make sure we follow symlinks on the command line only when we should:
 	> trusted.test="test"
 	>
 
-	$ getfattr -m- -RPhd here
+	$ getfattr -m- -RPhd here | sort-getfattr-output
 
 Make sure we recurse into sub-directories:
 	$ mkdir sub
@@ -89,7 +89,7 @@ Make sure we recurse into sub-directories:
 Make sure we follow symlinks to directories only when we should:
 	$ mkdir sub2
 	$ ln -s ../sub sub2/to-sub
-	$ getfattr -m- -Rhd sub2
+	$ getfattr -m- -Rhd sub2 | sort-getfattr-output
 
 	$ getfattr -m- -RLhd sub2 | sort-getfattr-output
 	> # file: sub2/to-sub/f
@@ -99,7 +99,7 @@ Make sure we follow symlinks to directories only when we should:
 	> trusted.test="test"
 	>
 
-	$ getfattr -m- -RPhd sub2
+	$ getfattr -m- -RPhd sub2 | sort-getfattr-output
 
 Symlink loop detection:
 	$ ln -s .. sub/up
