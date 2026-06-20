@@ -51,6 +51,8 @@
 # pragma GCC visibility push(default)
 #endif
 
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+
 int libattr_setxattr(const char *path, const char *name,
 		     void *value, size_t size, int flags)
 {

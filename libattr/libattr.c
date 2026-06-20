@@ -261,14 +261,15 @@ attr_removef(int fd, const char *attrname, int flags)
 
 static int
 attr_list_pack(const char *name, const int valuelen,
-		char *buffer, const int buffersize,
-		int *start_offset, int *end_offset)
+		char *buffer,
+		size_t *start_offset, size_t *end_offset)
 {
 	attrlist_ent_t *aentp;
 	attrlist_t *alist = (attrlist_t *)buffer;
-	int size = roundup(strlen(name) + 1 + sizeof(aentp->a_valuelen), 8);
+	size_t size = roundup(strlen(name) + 1 + sizeof(aentp->a_valuelen), 8);
 
-	if ((*end_offset - size) < (*start_offset + sizeof(alist->al_count))) {
+	if ((size > *end_offset) ||
+	    (*end_offset - size) < (*start_offset + sizeof(alist->al_count))) {
 		alist->al_more = 1;
 		return 1;
 	}
@@ -276,7 +277,10 @@ attr_list_pack(const char *name, const int valuelen,
 	*end_offset -= size;
 	aentp = (attrlist_ent_t *)&buffer[ *end_offset ];
 	aentp->a_valuelen = valuelen;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 	strncpy(aentp->a_name, name, size - sizeof(aentp->a_valuelen));
+#pragma GCC diagnostic pop
 
 	*start_offset += sizeof(alist->al_offset);
 	alist->al_offset[alist->al_count] = *end_offset;
@@ -289,12 +293,13 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 	  attrlist_cursor_t *cursor)
 {
 	const char *l;
-	int length, vlength, count = 0;
+	int length, vlength;
+	uint32_t count = 0;
 	char lbuf[MAXLISTLEN+1];
 	char name[MAXNAMELEN+16];
-	int start_offset, end_offset;
+	size_t start_offset, end_offset;
 
-	if (buffersize < sizeof(attrlist_t)) {
+	if (buffersize < 0 || (size_t)buffersize < sizeof(attrlist_t)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -322,7 +327,7 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 			continue;
 		if (count++ < cursor->opaque[0])
 			continue;
-		if (attr_list_pack(name, vlength, buffer, buffersize,
+		if (attr_list_pack(name, vlength, buffer,
 				   &start_offset, &end_offset)) {
 			if (cursor->opaque[0] == count - 1) {
 				errno = EINVAL;
@@ -340,12 +345,13 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 	   attrlist_cursor_t *cursor)
 {
 	const char *l;
-	int length, vlength, count = 0;
+	int length, vlength;
+	uint32_t count = 0;
 	char lbuf[MAXLISTLEN+1];
 	char name[MAXNAMELEN+16];
-	int start_offset, end_offset;
+	size_t start_offset, end_offset;
 
-	if (buffersize < sizeof(attrlist_t)) {
+	if (buffersize < 0 || (size_t)buffersize < sizeof(attrlist_t)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -367,7 +373,7 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 			continue;
 		if (count++ < cursor->opaque[0])
 			continue;
-		if (attr_list_pack(name, vlength, buffer, buffersize,
+		if (attr_list_pack(name, vlength, buffer,
 				   &start_offset, &end_offset)) {
 			if (cursor->opaque[0] == count - 1) {
 				errno = EINVAL;

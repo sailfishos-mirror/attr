@@ -15,6 +15,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define unused __attribute__ ((unused))
+
 extern int high_water_alloc(void **buf, size_t *bufsize, size_t newsize);
 
 extern const char *quote(const char *str, const char *quote_chars);

@@ -220,7 +220,7 @@ static const char *encode(const char *value, size_t *size)
 	return encoded;
 }
 
-static int print_attribute(int dirfd, const char *dirname, const char *pathname,
+static int print_attribute(int dirfd, const char *pathname,
 			   const char *fullname, const char *name,
 			   int *header_printed)
 {
@@ -284,7 +284,7 @@ static int print_attribute(int dirfd, const char *dirname, const char *pathname,
 	return 0;
 }
 
-static int list_attributes(int dirfd, const char *dirname, const char *pathname,
+static int list_attributes(int dirfd, const char *pathname,
 			   const char *fullname, int *header_printed)
 {
 	static char *list;
@@ -343,15 +343,15 @@ static int list_attributes(int dirfd, const char *dirname, const char *pathname,
 		int n;
 
 		for (n = 0; n < num_names; n++)
-			print_attribute(dirfd, dirname, pathname, fullname,
+			print_attribute(dirfd, pathname, fullname,
 					names[n], header_printed);
 	}
 	return 0;
 }
 
 static int do_print(int dirfd, const char *dirname, const char *pathname,
-		    unsigned char dirtype, enum walk_flags walk_flags,
-		    void *unused)
+		    unused unsigned char dirtype, enum walk_flags walk_flags,
+		    unused void *arg)
 {
 	static char *__fullname;
 	const char *fullname;
@@ -376,10 +376,10 @@ static int do_print(int dirfd, const char *dirname, const char *pathname,
 	}
 
 	if (opt_name)
-		err = print_attribute(dirfd, dirname, pathname, fullname,
+		err = print_attribute(dirfd, pathname, fullname,
 				      opt_name, &header_printed);
 	else
-		err = list_attributes(dirfd, dirname, pathname, fullname,
+		err = list_attributes(dirfd, pathname, fullname,
 				      &header_printed);
 
 	if (header_printed)
