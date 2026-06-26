@@ -1,3 +1,83 @@
+attr-2.6.0 (29 June 2026)
+	- Security fixes for CVE-2026-54371:
+	    - Fix symlink traversal privilege escalation vulnerability in getfattr and setfattr
+	    - Harden getfattr to properly handle symlinks with -h/--no-dereference option
+	    - Harden setfattr --restore with new -P/--physical option for safe restoring
+	    - Add warnings for potentially unsafe restore operations (can be disabled with
+	      the --disable-unsafe-restore-warnings configure option)
+	- New extended attribute system call support:
+	    - Add wrappers for new xattrat() system calls (getxattrat, setxattrat,
+	      listxattrat, removexattrat) introduced in kernel 6.13
+	    - Add backwards compatibility layer for older systems without xattrat() support
+	    - Add openat2() syscall wrapper support for enhanced security (kernel 5.6+)
+	- Code improvements and fixes:
+	    - Add new walk_tree helper, remove old implementation
+	    - Fix multiple memory management issues in attr_copy_* functions
+	    - Fix race conditions in listxattr and lgetxattr operations
+	    - Fix buffer overflow and use-after-free bugs in setfattr --restore
+	    - Remove dead code and improve compiler warning handling
+	    - Add visibility attribute support for better library symbol management
+	- Build system and compatibility:
+	    - Improve test suite for SELinux environments
+	    - Add License variable to pkg-config file
+	    - Fix various compiler warnings with -Wall, -Wextra, -Wmissing-prototypes
+	    - Add missing header includes and mark local functions static
+	- Translation updates:
+	    - Update the German translation
+	- Configuration updates:
+	    - Remove obsolete system.nfs4acl entry from xattr.conf
+	    - Add configure option --disable-unsafe-restore-warnings
+
+attr-2.5.2 (13 Jan 2024)
+	- Build system improvements:
+	    - Require automake 1.15+
+	    - Update various URLs and documentation
+	    - Include standard INSTALL file for new build system
+	    - Drop obsolete PORTING guide
+	    - Use LGPL for library code exports
+	    - Switch to AC_CONFIG_HEADERS
+	    - Only include compat syscall stubs on Linux systems
+	    - Use LDLIBS instead of LDFLAGS for libraries
+	    - Fix incompatibility with autoconf 2.13
+	- Man page improvements:
+	    - Fix various typos
+	    - Use apostrophe instead of acute accent
+	    - Remove mdoc-specific macros
+	    - Standardize AUTHORS sections
+	    - Fix bold style in SEE ALSO sections
+	    - Add examples to setfattr.1
+	    - Fix stale attr(5) references
+	- Code improvements:
+	    - Set symbol versions for legacy syscalls via attribute or asm
+	    - Mark long_options static & const
+	    - Replace bzero with memset
+	    - Guard against unterminated buffer in attr_list, attr_listf
+	    - Don't set errno to -EINVAL in attr_multi, attr_multif
+	    - Fix well_enough_printable terminating NULL handling in getfattr
+	    - Eliminate dead store in attr_copy_action()
+	    - Enable large-file support on systems that don't enable it by default
+	- Translation updates:
+	    - Update French, Dutch, Polish, and Georgian translations
+	    - Update po files to be properly sorted
+	    - Disable translations in tests
+	- Test suite improvements:
+	    - Escape left brace in regex in test/run
+	- Examples:
+	    - Check "user." as prefix not as entire string
+	    - Ignore examples/copyattr build artifact
+
+attr-2.5.1 (16 March 2021)
+	- Fix libtool library versioning regression
+
+attr-2.5.0 (11 March 2021)
+	- Add --one-file-system option to getfattr (similar to tar --one-file-system)
+	- Refactor walk_tree internals for better maintainability:
+	    - Move struct stat and open directories list into walk_tree_args
+	    - Move walk_tree_rec arguments into separate struct
+	- xattr.conf: Add afs metadata xattrs to skip list when copying
+	- Update po files and German translation
+	- install-data: Don't remove unrelated empty directories
+
 attr-2.4.44
 	- Fix attr/acl code for handling of recursive walking without following symlinks
 	  Patch contributed by Brandon Philips <brandon@ifup.org>.
