@@ -101,18 +101,19 @@ Dump out the raw extended attribute value(s) without encoding them.
 .TP
 .BR \-R ", " \-\-recursive
 List the attributes of all files and directories recursively.
+This option is commonly used together with option \-h.
 .TP
 .BR \-L ", " \-\-logical
-Logical walk, follow symbolic links to directories.
-The default behaviour is to follow symbolic link arguments unless
-\-\-no\-dereference is given, and to skip symbolic links encountered in
-subdirectories.
+Logical walk, recurse into symbolic links that refer to a directory.
 Only effective in combination with \-R.
+The default behaviour is to recurse into symbolic links given on the command
+line, and not to recurse into symbolic links encountered in subdirectories.
 .TP
 .BR \-P ", " \-\-physical
-Physical walk, do not follow symbolic links to directories.
-This also skips symbolic link arguments.
+Physical walk, do not recurse into symbolic links that refer to a directory.
 Only effective in combination with \-R.
+(For pathnames given on the command line, this option applies only to the final
+component; preceding path components may still be symbolic links.)
 .TP
 .B \-\-version
 Print the version of
